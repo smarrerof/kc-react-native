@@ -11,7 +11,7 @@ export default class CharacterCell extends Component {
   render() {
     const { item, onSelect } = this.props
     const image = item.thumbnail && !item.thumbnail.path.endsWith('image_not_available') ? 
-      { uri: `${item.thumbnail.path.replace('http', 'https')}.${item.thumbnail.extension}` } : 
+      { uri: `${item.thumbnail.path.replace('http', 'https')}/standard_large.${item.thumbnail.extension}` } : 
       require('react_marvel/src/resources/unknown.png')
 
     const name = item.name ? item.name : '???'
