@@ -15,6 +15,14 @@ function setCharactersFetching(value) {
   }
 }
 
+export function updateCharacterSelected(value) {
+  return {
+    type: types.CHARACTERS_UPDATE_CHARACTER,
+    value
+  }
+}
+
+
 
 export function fetchCharactersList() {
   return (dispatch, getState) => {

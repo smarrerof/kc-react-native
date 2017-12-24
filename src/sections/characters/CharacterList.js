@@ -8,8 +8,6 @@ import * as CharactersActions from 'react_marvel/src/redux/actions/characters'
 /*******************/
 
 import { Colors } from 'react_marvel/src/commons'
-import { fetch, post, remove } from 'react_marvel/src/webservices/webservices'
-
 import CharacterCell from './CharacterCell'
 
 
@@ -20,7 +18,7 @@ export class CharactersList extends Component {
   }
 
   onSelect(character) {
-    console.log('CharacterList onSelect', character)
+    this.props.updateSelected(character);
   }
 
   renderItem(item, index) {
@@ -56,6 +54,10 @@ const mapDispatchToProps = (dispatch, props) => {
   return {
     fetchCharactersList: () => {
       dispatch(CharactersActions.fetchCharactersList())
+    },
+    updateSelected: (character) => {
+      dispatch(CharactersActions.updateCharacterSelected(character))
+      Actions.CharacterView({ title: character.name })
     }
   }
 }

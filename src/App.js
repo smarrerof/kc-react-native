@@ -25,7 +25,7 @@ import * as webservices from 'react_marvel/src/webservices/webservices'
 import { Colors } from 'react_marvel/src/commons'
 
 import CharacterList from 'react_marvel/src/sections/characters/CharacterList'
-
+import CharacterView from 'react_marvel/src/sections/characters/CharacterView'
 
 export default class App extends Component {
 
@@ -44,6 +44,13 @@ export default class App extends Component {
               key={'CharacterList'}
               component={CharacterList}
               hideNavBar
+            />
+
+            <Scene
+              key={'CharacterView'}
+              component={CharacterView}
+              navigationBarStyle={ styles.navBar } 
+              navBarButtonColor={ 'white' }
             />
 
           </Scene>
