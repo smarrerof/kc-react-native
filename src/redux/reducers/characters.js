@@ -4,6 +4,7 @@ const initialState = {
   isFetching: false,
   list: [],
   item: null,
+  comics: []
 }
 
 export default function reducer(state = initialState, action = {}) {
@@ -25,6 +26,12 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         item: action.value
+      };
+
+    case types.CHARACTERS_UPDATE_EXTRA_COMIC:
+      return {
+        ...state,
+        comics: action.value
       };
 
       default:

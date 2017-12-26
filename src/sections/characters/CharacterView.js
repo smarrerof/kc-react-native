@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Image, Text, Dimensions } from 'react-native'
+import { ScrollView, View, StyleSheet, Image, Text, Dimensions, SectionList } from 'react-native'
 
 /****** Redux ******/
 import { Actions } from 'react-native-router-flux'
@@ -12,16 +12,29 @@ import { Colors } from 'react_marvel/src/commons'
 
 export class CharacterView extends Component {
 
+  componentWillMount() {
+    this.props.fetchCharacterExtra();
+  }
+
+  renderSectionHeader(section) {
+
+  }
+
+  renderItem() {
+
+  }
+
   render() {
     const { character } = this.props
     const image = character ? { uri: `${character.thumbnail.path.replace('http', 'https')}/landscape_large.${character.thumbnail.extension}` } : null
     const name = character ? character.name : ''
     const description = character ? character.description : ''
 
-    console.log('image', image)
+    console.log('comics', this.props.comics)
 
     return (
-      <View style={ styles.container} >
+      <ScrollView>
+      <View style={ styles.container } >
         <Image source={ image } style={ styles.image } resizeMode={ 'cover' } />
         <View style={ styles.textContainer }>
           <Text style={ styles.name }>{ name }</Text>
@@ -29,7 +42,28 @@ export class CharacterView extends Component {
         <View style={ styles.textContainer }>
           <Text style={ styles.description }>{ description }</Text>
         </View>
+        <View style={ styles.textContainer }>
+          <SectionList 
+            renderSectionHeader={ ({section}) => 
+              <View style={ styles.headerSectionContainer }>
+                <Text style={ styles.headerSectionText }>{section.title}</Text>
+              </View>
+            }
+            renderItem={ ({item}) => 
+              <View style={ styles.itemContainer }>
+                <Text style={ styles.itemText }>{ item.title }</Text>
+              </View> 
+            }
+            sections={[
+              { data: this.props.comics, title: "Comics" },
+              { data: ["event1"], title: "Events" },
+              { data: ["series1"], title: "Series" },
+              { data: ["stories1"], title: "Stories" }
+            ]}
+          />
+        </View>
       </View>
+      </ScrollView>
     )
   }
 }
@@ -37,10 +71,19 @@ export class CharacterView extends Component {
 const mapStateToProps = (state) => {
   return {
       character: state.characters.item,
+      comics: state.characters.comics
   }
 }
 
-export default connect(mapStateToProps, null)(CharacterView)
+const mapDispatchToProps = (dispatch, props) => {
+  return {
+    fetchCharacterExtra: () => {
+      dispatch(CharactersActions.fetchCharacterExtra())
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CharacterView)
 
 const styles = StyleSheet.create({
   container: {
@@ -68,4 +111,19 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: 'white',
   },
+  headerSectionContainer: {
+    backgroundColor: Colors.primary,
+    padding: 10
+  },
+  headerSectionText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  itemContainer: {
+    padding: 5
+  },
+  itemText: {
+    color: 'white'
+  }
 })
