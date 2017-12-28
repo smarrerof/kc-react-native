@@ -4,7 +4,10 @@ const initialState = {
   isFetching: false,
   list: [],
   item: null,
-  comics: []
+  comics: [],
+  events: [],
+  series: [],
+  stories: []
 }
 
 export default function reducer(state = initialState, action = {}) {
@@ -28,10 +31,28 @@ export default function reducer(state = initialState, action = {}) {
         item: action.value
       };
 
-    case types.CHARACTERS_UPDATE_EXTRA_COMIC:
+    case types.CHARACTERS_UPDATE_EXTRA_COMICS:
       return {
         ...state,
         comics: action.value
+      };
+
+    case types.CHARACTERS_UPDATE_EXTRA_EVENTS:
+      return {
+        ...state,
+        events: action.value
+      };
+
+    case types.CHARACTERS_UPDATE_EXTRA_SERIES:
+      return {
+        ...state,
+        series: action.value
+      };
+
+    case types.CHARACTERS_UPDATE_EXTRA_STORIES:
+      return {
+        ...state,
+        stories: action.value
       };
 
       default:

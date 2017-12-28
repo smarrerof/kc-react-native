@@ -20,18 +20,34 @@ export class CharacterView extends Component {
 
   }
 
-  renderItem() {
+  renderItemImageText(item) {
+    const image = { uri: item.thumbnail.path.replace('http', 'https') + '/portrait_small.' + item.thumbnail.extension }
+    const title = item.title
 
+    return <View style={ styles.itemContainer }>
+        <Image 
+          source={ image } 
+          style={ styles.itemImage } 
+          resizeMode={ 'cover' }
+        />
+      <Text style={ styles.itemText }>{ item.title }</Text>
+    </View>
+  }
+
+  renderItemText(item) {
+    const title = item.title
+
+    return <View style={ styles.itemContainer }>
+      <Text style={ styles.itemText }>{ item.title }</Text>
+    </View>
   }
 
   render() {
     const { character } = this.props
     const image = character ? { uri: `${character.thumbnail.path.replace('http', 'https')}/landscape_large.${character.thumbnail.extension}` } : null
     const name = character ? character.name : ''
-    const description = character ? character.description : ''
-
-    console.log('comics', this.props.comics)
-
+    const description = character ? character.description : 'No information available'
+   
     return (
       <ScrollView>
       <View style={ styles.container } >
@@ -55,10 +71,22 @@ export class CharacterView extends Component {
               </View> 
             }
             sections={[
-              { data: this.props.comics, title: "Comics" },
-              { data: ["event1"], title: "Events" },
-              { data: ["series1"], title: "Series" },
-              { data: ["stories1"], title: "Stories" }
+              { data: this.props.comics, 
+                title: "Comics", 
+                renderItem: ({item}) => this.renderItemImageText(item) 
+              },
+              { data: this.props.events, 
+                title: "Events", 
+                renderItem: ({item}) => this.renderItemImageText(item) 
+              },
+              { data: this.props.series, 
+                title: "Series", 
+                renderItem: ({item}) => this.renderItemImageText(item) 
+              },
+              { data: this.props.stories, 
+                title: "Stories", 
+                renderItem: ({item}) => this.renderItemText(item) 
+              }
             ]}
           />
         </View>
@@ -71,7 +99,10 @@ export class CharacterView extends Component {
 const mapStateToProps = (state) => {
   return {
       character: state.characters.item,
-      comics: state.characters.comics
+      comics: state.characters.comics,
+      events: state.characters.events,
+      series: state.characters.series,
+      stories: state.characters.stories
   }
 }
 
@@ -113,7 +144,8 @@ const styles = StyleSheet.create({
   },
   headerSectionContainer: {
     backgroundColor: Colors.primary,
-    padding: 10
+    padding: 10,
+    marginTop: 10
   },
   headerSectionText: {
     color: 'white',
@@ -121,9 +153,17 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   itemContainer: {
+    flexDirection: 'row',
     padding: 5
   },
+  itemImage: {
+    height: 100,
+    width: 80
+  },
   itemText: {
-    color: 'white'
+    color: 'white',
+    flex: 1,
+    paddingLeft: 10,
+    fontWeight: '600'
   }
 })
