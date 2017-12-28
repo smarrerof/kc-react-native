@@ -65,6 +65,11 @@ export class CharacterView extends Component {
                 <Text style={ styles.headerSectionText }>{section.title}</Text>
               </View>
             }
+            renderSectionFooter={ ({section}) => 
+              <View>
+                <Text style={ styles.headerSectionText }>{'Load more'}</Text>
+              </View>
+            }
             renderItem={ ({item}) => 
               <View style={ styles.itemContainer }>
                 <Text style={ styles.itemText }>{ item.title }</Text>

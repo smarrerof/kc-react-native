@@ -15,33 +15,32 @@ function setCharactersFetching(value) {
   }
 }
 
-function updateCharacterExtraComics(value) {
+function updateCharacterExtra(type, value) {
   return {
-    type: types.CHARACTERS_UPDATE_EXTRA_COMICS,
+    type,
     value
   }
 }
 
-function updateCharacterExtraEvents(value) {
-  return {
-    type: types.CHARACTERS_UPDATE_EXTRA_EVENTS,
-    value
-  }
+
+function fetchData(dispatch, fetchUrl, type) {
+  dispatch(setCharactersFetching(true))
+
+  fetch(fetchUrl)
+    .then(response => {
+      dispatch(setCharactersFetching(false))
+
+      const list = response && response.data && response.data.results ? response.data.results : []
+      console.log('CharacterExtra', type, 'response', response)
+
+      dispatch(updateCharacterExtra(type, list))
+    })
+    .catch(error => {
+      dispatch(setCharactersFetching(false))
+      console.error('CharacterExtra', type, 'error', error)
+    })  
 }
 
-function updateCharacterExtraSeries(value) {
-  return {
-    type: types.CHARACTERS_UPDATE_EXTRA_SERIES,
-    value
-  }
-}
-
-function updateCharacterExtraStories(value) {
-  return {
-    type: types.CHARACTERS_UPDATE_EXTRA_STORIES,
-    value
-  }
-}
 
 export function updateCharacterSelected(value) {
   return {
@@ -82,60 +81,9 @@ export function fetchCharacterExtra() {
     const seriesUrl = character.series.collectionURI.replace('http', 'https') + '?ts=1234&apikey=a3ce93a8401b1219c18b9ca8310e1abc&hash=5742e01f78129797c6cc8aca0ec8f005'
     const storiesUrl = character.stories.collectionURI.replace('http', 'https') + '?ts=1234&apikey=a3ce93a8401b1219c18b9ca8310e1abc&hash=5742e01f78129797c6cc8aca0ec8f005'
 
-    fetch(comicsUrl)
-      .then(response => {
-        dispatch(setCharactersFetching(false))
-
-        const list = response && response.data && response.data.results ? response.data.results : []
-        console.log('CharacterExtraComics response', response)
-
-        dispatch(updateCharacterExtraComics(list))
-      })
-      .catch(error => {
-        dispatch(setCharactersFetching(false))
-        console.error('CharacterExtraComics error', error)
-      })
-
-    fetch(eventsUrl)
-      .then(response => {
-        dispatch(setCharactersFetching(false))
-
-        const list = response && response.data && response.data.results ? response.data.results : []
-        console.log('CharacterExtraEvents response', response)
-
-        dispatch(updateCharacterExtraEvents(list))
-      })
-      .catch(error => {
-        dispatch(setCharactersFetching(false))
-        console.error('CharacterExtraEvents error', error)
-      })
-
-      fetch(seriesUrl)
-        .then(response => {
-          dispatch(setCharactersFetching(false))
-
-          const list = response && response.data && response.data.results ? response.data.results : []
-          console.log('CharacterExtraSeries response', response)
-
-          dispatch(updateCharacterExtraSeries(list))
-        })
-        .catch(error => {
-          dispatch(setCharactersFetching(false))
-          console.error('CharacterExtraSeries error', error)
-        })
-
-      fetch(storiesUrl)
-        .then(response => {
-          dispatch(setCharactersFetching(false))
-
-          const list = response && response.data && response.data.results ? response.data.results : []
-          console.log('CharacterExtraStories response', response)
-
-          dispatch(updateCharacterExtraStories(list))
-        })
-        .catch(error => {
-          dispatch(setCharactersFetching(false))
-          console.error('CharacterExtraStories error', error)
-        })
+    fetchData(dispatch, comicsUrl, types.CHARACTERS_UPDATE_EXTRA_COMICS)
+    fetchData(dispatch, eventsUrl, types.CHARACTERS_UPDATE_EXTRA_EVENTS)
+    fetchData(dispatch, seriesUrl, types.CHARACTERS_UPDATE_EXTRA_SERIES)
+    fetchData(dispatch, storiesUrl, types.CHARACTERS_UPDATE_EXTRA_STORIES)
   }
 }
