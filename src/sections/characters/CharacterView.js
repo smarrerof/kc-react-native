@@ -78,21 +78,22 @@ export class CharacterView extends Component {
             sections={[
               { data: this.props.comics, 
                 title: "Comics", 
-                renderItem: ({item}) => this.renderItemImageText(item) 
+                renderItem: ({item}) => this.renderItemImageText(item),keyExtractor: (item) => item.id 
               },
               { data: this.props.events, 
                 title: "Events", 
-                renderItem: ({item}) => this.renderItemImageText(item) 
+                renderItem: ({item}) => this.renderItemImageText(item),keyExtractor: (item) => item.id  
               },
               { data: this.props.series, 
                 title: "Series", 
-                renderItem: ({item}) => this.renderItemImageText(item) 
+                renderItem: ({item}) => this.renderItemImageText(item),keyExtractor: (item) => item.id  
               },
               { data: this.props.stories, 
                 title: "Stories", 
-                renderItem: ({item}) => this.renderItemText(item) 
+                renderItem: ({item}) => this.renderItemText(item),keyExtractor: (item) => item.id  
               }
             ]}
+            
           />
         </View>
       </View>
@@ -128,12 +129,14 @@ const styles = StyleSheet.create({
   },
   image: {
     width: Dimensions.get('window').width,
-    height: 200,
+    height: 200
   },
   textContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 20,
+    paddingTop: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   name: {
     flex: 1,
