@@ -1,6 +1,9 @@
 import * as types from '../types/characters'
 import { fetch, post } from 'react_marvel/src/webservices/webservices'
 
+import { Actions } from 'react-native-router-flux';
+
+
 function updateCharactersList(value) {
   return {
     type: types.CHARACTERS_UPDATE_LIST,
@@ -85,5 +88,31 @@ export function fetchCharacterExtra() {
     fetchData(dispatch, eventsUrl, types.CHARACTERS_UPDATE_EXTRA_EVENTS)
     fetchData(dispatch, seriesUrl, types.CHARACTERS_UPDATE_EXTRA_SERIES)
     fetchData(dispatch, storiesUrl, types.CHARACTERS_UPDATE_EXTRA_STORIES)
+  }
+}
+
+export function postCharacter(character) {
+  return (dispatch, getState) => {
+    dispatch(setCharactersFetching(true))
+    const state = getState()
+
+    const fetchUrl = '/characters'
+    post(fetchUrl, character)
+      .then(response => {
+        dispatch(setCharactersFetching(false))
+        console.log('postCharacter response', response)
+
+        /*if (response.record) {
+          dispatch(fetchCharactersList())
+          dispatch(updateCharacterSelected(null))
+          Actions.pop()
+        }*/
+        
+        Actions.pop()
+      })
+      .catch((error) => {
+        dispatch(setCharactersFetching(false))
+        console.log('postCharacter error', error)
+      })
   }
 }

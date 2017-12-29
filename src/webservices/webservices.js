@@ -1,6 +1,9 @@
 import axios from 'axios'
 import * as constants from './constants'
 
+function buildUrl(endpoint, url) {
+  return `${url ? url : ''}${endpoint}`
+}
 
 export function configureAxios() {
   axios.defaults.baseURL = constants.BASE_URL;
@@ -8,8 +11,8 @@ export function configureAxios() {
 }
 
 
-export function fetch(url) {
-  return axios.get(url)
+export function fetch(endpoint) {
+  return axios.get(endpoint)
     .then((response) => {
       return response.data
     })
@@ -18,8 +21,10 @@ export function fetch(url) {
     });
 }
 
-export function post(url, data) {
-  return axios.post(url, data)
+export function post(endpoint, data) {
+  return axios.post(endpoint + '.json', data, {
+      baseURL: constants.BASE_POST_URL
+    })
     .then(response => {
       return response.data
     })
@@ -28,8 +33,8 @@ export function post(url, data) {
     })
 }
 
-export function remove(url, data) {
-  return axios.delete(url, data)
+export function remove(endpoint, data) {
+  return axios.delete(endpoint, data)
     .then(response => {
       return response.data
     })

@@ -5,7 +5,7 @@
  */
 
 import React, { Component } from 'react';
-import { StatusBar, StyleSheet } from 'react-native'
+import { StatusBar, StyleSheet, TouchableOpacity, Image } from 'react-native'
 import { Actions, Scene, Router } from 'react-native-router-flux'
 
 /****** Redux ******/
@@ -26,12 +26,24 @@ import { Colors } from 'react_marvel/src/commons'
 
 import CharacterList from 'react_marvel/src/sections/characters/CharacterList'
 import CharacterView from 'react_marvel/src/sections/characters/CharacterView'
+import CharacterNew from 'react_marvel/src/sections/characters/CharacterNew'
 
 export default class App extends Component {
 
   componentWillMount() {
     webservices.configureAxios()
     StatusBar.setBarStyle('light-content') // iOS StatusBar light style
+  }
+
+  renderRightButton() {
+    return (
+      <TouchableOpacity style={ styles.buttonContainer } onPress={ () => { Actions.CharacterNew() } }>
+        <Image
+          style={ styles.button }
+          source={ require('react_marvel/src/resources/add.png') }
+        />
+      </TouchableOpacity>
+    )
   }
 
   render() {
@@ -43,7 +55,10 @@ export default class App extends Component {
             <Scene
               key={'CharacterList'}
               component={CharacterList}
-              hideNavBar
+              title='Characters'
+              navigationBarStyle={ styles.navBar }
+              navBarButtonColor={ 'white' }
+              renderRightButton={ () => this.renderRightButton() }
             />
 
             <Scene
@@ -51,6 +66,14 @@ export default class App extends Component {
               component={CharacterView}
               navigationBarStyle={ styles.navBar } 
               navBarButtonColor={ 'white' }
+            />
+
+            <Scene 
+              key={'CharacterNew'}
+              component={ CharacterNew }
+              navigationBarStyle={ styles.navBar } 
+              navBarButtonColor={ 'white' }
+              title={'New character'}
             />
 
           </Scene>
@@ -63,5 +86,12 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   navBar: {
     backgroundColor: Colors.navBar
+  },
+  buttonContainer: {
+    paddingRight: 10
+  },
+  button: {
+    height: 24,
+    width: 24
   }
 });
