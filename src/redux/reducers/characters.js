@@ -3,6 +3,8 @@ import * as types from 'react_marvel/src/redux/types/characters'
 const initialState = {
   isFetching: false,
   list: [],
+  total: 0,
+  offset: 0,
   item: null,
   comics: [],
   events: [],
@@ -16,7 +18,14 @@ export default function reducer(state = initialState, action = {}) {
     case types.CHARACTERS_UPDATE_LIST:
       return {
         ...state,
-        list: action.value
+        list: action.list,
+        total: action.total
+      };
+
+    case types.CHARACTERS_UPDATE_LIST_OFFSET:
+      return {
+        ...state,
+        offset: action.value
       };
 
     case types.CHARACTERS_SET_FETCHING:

@@ -4,9 +4,17 @@ import { fetch, post } from 'react_marvel/src/webservices/webservices'
 import { Actions } from 'react-native-router-flux';
 
 
-function updateCharactersList(value) {
+function updateCharactersList(list, total) {
   return {
     type: types.CHARACTERS_UPDATE_LIST,
+    list,
+    total
+  }
+}
+
+export function updateCharactersListOffset(value) {
+  return {
+    type: types.CHARACTERS_UPDATE_LIST_OFFSET,
     value
   }
 }
@@ -52,21 +60,43 @@ export function updateCharacterSelected(value) {
   }
 }
 
+export function initCharactersList() {
+  return (dispatch, getState) => {
+    // Reset character list and set total to 0
+    dispatch(updateCharactersList([], 0))
+
+    // Set offset to 0
+    dispatch(updateCharactersListOffset(0))
+
+    // Fetch list
+    dispatch(fetchCharactersList())
+  }
+}
+
 export function fetchCharactersList() {
   return (dispatch, getState) => {
     dispatch(setCharactersFetching(true))
 
-    const fetchUrl = '/characters?ts=1234&apikey=a3ce93a8401b1219c18b9ca8310e1abc&hash=5742e01f78129797c6cc8aca0ec8f005'
+    const state = getState()
+    const list = state.characters.list
+    const offset = state.characters.offset
+    const limit = 10
+
+    const fetchUrl = '/characters?ts=1234&apikey=a3ce93a8401b1219c18b9ca8310e1abc&hash=5742e01f78129797c6cc8aca0ec8f005&offset='+offset+'&limit='+limit
 
     console.log('CharactersList', fetchUrl)
     fetch(fetchUrl)
       .then(response => {
         dispatch(setCharactersFetching(false))
 
-        const list = response && response.data && response.data.results ? response.data.results : []
+        const _list = response && response.data && response.data.results ? response.data.results : []
+        const total = response && response.data ? response.data.total : 0
         console.log('CharactersList response', response)
 
-        dispatch(updateCharactersList(list))
+        // Concat list and _list
+        const newList = [...list, ..._list]
+
+        dispatch(updateCharactersList(newList, total))
       })
       .catch(error => {
         dispatch(setCharactersFetching(false))
