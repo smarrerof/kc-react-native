@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import * as CharactersActions from 'react_marvel/src/redux/actions/characters'
 /*******************/
 
+import ImagePicker from 'react-native-image-picker';
 import { Colors } from 'react_marvel/src/commons'
 import { Button, Input } from 'react_marvel/src/widgets'
 
@@ -45,16 +46,45 @@ export class CharacterNew extends Component {
       const data = {
         name: this.state.name,
         description: this.state.description,
-        image: '' //this.state.image ? 'data:image/jpeg;base64,' + this.state.image.data : null
+        image: this.state.image ? 
+          'data:image/jpeg;base64,' + this.state.image.data : 
+          null
       }
 
       this.props.postCharacter(data)
     }
   }
 
+  onSelectImageTapped() {
+    const options = {
+      title: 'Select an image',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images'
+      }
+    }
+
+    ImagePicker.showImagePicker(options, (response) => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      }
+      else if (response.error) {
+        console.log('ImagePicker error: ', response.error);
+      }
+      else {
+        console.log('image response', response)
+        this.setState({
+          image: response
+        });
+      }
+    });
+  }
+
   render() {
-    const imageUri = ''
-    const imageButtonText = 'Select an image'
+    const imageUri = this.state.image ? { uri: this.state.image.uri } : null
+    const imageButtonText = this.state.image ? this.state.image.fileName : 'Select an image'
 
     return (
       <View style={styles.container}>
@@ -144,6 +174,7 @@ const styles = StyleSheet.create({
     borderRadius: 6
   },
   textButton: {
+    backgroundColor: 'transparent',
     color: 'white',
     fontWeight: '600'
   },
