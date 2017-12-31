@@ -1,5 +1,6 @@
-import * as types from '../types/characters'
-import { fetch, post } from 'react_marvel/src/webservices/webservices'
+import * as types from 'react_marvel/src/redux/types/characters'
+import * as constants from 'react_marvel/src/webservices/constants'
+import { fetch, post, remove } from 'react_marvel/src/webservices/webservices'
 
 import { Actions } from 'react-native-router-flux';
 
@@ -9,6 +10,13 @@ function updateCharactersList(list, total) {
     type: types.CHARACTERS_UPDATE_LIST,
     list,
     total
+  }
+}
+
+function updateCustomCharactersList(customList) {
+  return {
+    type: types.CHARACTERS_UPDATE_CUSTOM_LIST,
+    customList
   }
 }
 
@@ -105,6 +113,35 @@ export function fetchCharactersList() {
   }
 }
 
+export function fetchCustomCharactersList() {
+  return (dispatch, getState) => {
+    dispatch(setCharactersFetching(true))
+
+    const fetchUrl = '/characters'
+
+    console.log('CharactersList', fetchUrl)
+    fetch(fetchUrl, constants.BASE_CUSTOM)
+      .then(response => {
+        dispatch(setCharactersFetching(false))
+
+        console.log('CharactersList response', response)
+
+        let list = []
+        Object.keys(response).forEach((property) => {
+          let item = response[property]
+          item.id = property
+          list.push(item)
+        })
+
+        dispatch(updateCustomCharactersList(list))
+      })
+      .catch(error => {
+        dispatch(setCharactersFetching(false))
+        console.error('CharactersList error', error)
+      })
+  }
+}
+
 export function fetchCharacterExtra() {
   return (dispatch, getState) => {
     const character = getState().characters.item
@@ -124,25 +161,44 @@ export function fetchCharacterExtra() {
 export function postCharacter(character) {
   return (dispatch, getState) => {
     dispatch(setCharactersFetching(true))
-    const state = getState()
-
+    
     const fetchUrl = '/characters'
-    post(fetchUrl, character)
+    post(fetchUrl, character, constants.BASE_CUSTOM)
       .then(response => {
         dispatch(setCharactersFetching(false))
         console.log('postCharacter response', response)
 
-        /*if (response.record) {
-          dispatch(fetchCharactersList())
+        if (response) {
+          dispatch(fetchCustomCharactersList())
           dispatch(updateCharacterSelected(null))
           Actions.pop()
-        }*/
-        
-        Actions.pop()
+        }
       })
       .catch((error) => {
         dispatch(setCharactersFetching(false))
         console.log('postCharacter error', error)
+      })
+  }
+}
+
+export function deleteCharacter(character) {
+  return (dispatch, getState) => {
+    dispatch(setCharactersFetching(true))
+    
+    const fetchUrl = '/characters/' + character.id
+    remove(fetchUrl, constants.BASE_CUSTOM)
+      .then((response) => {
+        dispatch(setCharactersFetching(false))
+        console.log('deleteCharacter response', response)
+
+        // Firebase, response is null when delete
+        dispatch(fetchCustomCharactersList())
+        dispatch(updateCharacterSelected(null))
+        Actions.pop() 
+      })
+      .catch((error) => {
+        dispatch(setCharactersFetching(false))
+        console.log('deleteCharacter error', error)
       })
   }
 }

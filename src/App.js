@@ -25,7 +25,8 @@ import * as webservices from 'react_marvel/src/webservices/webservices'
 import { Colors } from 'react_marvel/src/commons'
 
 import CharacterList from 'react_marvel/src/sections/characters/CharacterList'
-import CharacterView from 'react_marvel/src/sections/characters/CharacterView'
+import CustomCharacterView from 'react_marvel/src/sections/characters/custom/CharacterView'
+import MarvelCharacterView from 'react_marvel/src/sections/characters/marvel/CharacterView'
 import CharacterNew from 'react_marvel/src/sections/characters/CharacterNew'
 
 export default class App extends Component {
@@ -62,8 +63,15 @@ export default class App extends Component {
             />
 
             <Scene
-              key={'CharacterView'}
-              component={CharacterView}
+              key={'CustomCharacterView'}
+              component={CustomCharacterView}
+              navigationBarStyle={ styles.navBar } 
+              navBarButtonColor={ 'white' }
+            />
+
+            <Scene
+              key={'MarvelCharacterView'}
+              component={MarvelCharacterView}
               navigationBarStyle={ styles.navBar } 
               navBarButtonColor={ 'white' }
             />

@@ -2,6 +2,7 @@ import * as types from 'react_marvel/src/redux/types/characters'
 
 const initialState = {
   isFetching: false,
+  customList: [],
   list: [],
   total: 0,
   offset: 0,
@@ -27,6 +28,12 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         offset: action.value
       };
+
+      case types.CHARACTERS_UPDATE_CUSTOM_LIST:
+        return {
+          ...state,
+          customList: action.customList
+        };
 
     case types.CHARACTERS_SET_FETCHING:
       return {

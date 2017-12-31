@@ -45,8 +45,8 @@ export class CharacterView extends Component {
   render() {
     const { character } = this.props
     const image = character ? { uri: `${character.thumbnail.path.replace('http', 'https')}/landscape_large.${character.thumbnail.extension}` } : null
-    const name = character ? character.name : ''
-    const description = character ? character.description : 'No information available'
+    const name = character && character.name !== '' ? character.name : 'No name available'
+    const description = character && character.description !== '' ? character.description : 'No description available'
    
     return (
       <ScrollView>

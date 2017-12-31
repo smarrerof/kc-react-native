@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, Image, StyleSheet, Dimensions, Platform, View, Text } from 'react-native';
+import { TouchableOpacity, Image, StyleSheet, View, Text } from 'react-native';
 
 export default class CharacterCell extends Component {
 
@@ -10,11 +10,11 @@ export default class CharacterCell extends Component {
 
   render() {
     const { item, onSelect } = this.props
-    const image = item.thumbnail && !item.thumbnail.path.endsWith('image_not_available') ? 
-      { uri: `${item.thumbnail.path.replace('http', 'https')}/standard_large.${item.thumbnail.extension}` } : 
+    const image = item.image ? 
+      { uri: item.image } : 
       require('react_marvel/src/resources/unknown.png')
 
-    const name = item.name ? item.name : '???'
+    const name = item.name ? item.name : 'No name available'
 
     return (
       <TouchableOpacity 
@@ -24,7 +24,7 @@ export default class CharacterCell extends Component {
         <Image 
           source={ image }
           style={ styles.image }
-          resizeMode={ 'contain' } />
+          resizeMode={ 'cover' } />
 
         <View style={styles.textContainer}>
           <Text style={styles.name}>{name}</Text>
@@ -37,29 +37,11 @@ export default class CharacterCell extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    margin: 10,
-    width: Dimensions.get('window').width / 2 - 20,
-    height: Dimensions.get('window').width / 2 - 20,
-    ...Platform.select({
-        ios: {
-          shadowColor: 'rgba(255,255,255,0.1)',
-          shadowOpacity: 1,
-          shadowOffset: { height: 4, width: 4 },
-          shadowRadius: 2,
-        },
-        android: {
-          elevation: 4,
-        },
-    })
+    marginBottom: 5
   },
   image: {
-    width: Dimensions.get('window').width / 2 - 20,
-    height: Dimensions.get('window').width / 2 - 20,
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0
+    width: '100%',
+    height: 200
   },
   textContainer: {
     flexDirection: 'row',
