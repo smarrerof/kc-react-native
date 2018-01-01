@@ -42,18 +42,20 @@ export class CharactersList extends Component {
     }
   }
 
-  renderCustomItem(item, index) {
-    return <CustomCharacterCell
-      item={ item }
-      onSelect={ (character) => this.onCustomSelect(character) }
-    />
+  // Renders (header, footer and item)
+  renderSectionHeader(section) {
+    return (
+      <View style={ styles.headerSectionContainer }>
+        <Text style={ styles.headerSectionText }>{section.title}</Text>
+      </View>
+    )
   }
 
-  renderMarvelItem(item, index) {
-    return <MarvelCharacterCell
-      item={ item }
-      onSelect={ (character) => this.onMarvelSelect(character) }
-    />
+  renderSectionFooter(section) {
+    if (section.title === 'Custom')
+      return this.renderCustomFooter()
+    else if (section.title === 'Marvel')
+      return this.renderMarvelFooter();
   }
 
   renderCustomFooter() {
@@ -72,22 +74,25 @@ export class CharactersList extends Component {
     )
   }
 
-  renderSectionFooter(section) {
-    if (section.title === 'Custom')
-      return this.renderCustomFooter()
-    else if (section.title === 'Marvel')
-      return this.renderMarvelFooter();
+  renderCustomItem(item, index) {
+    return <CustomCharacterCell
+      item={ item }
+      onSelect={ (character) => this.onCustomSelect(character) }
+    />
+  }
+
+  renderMarvelItem(item, index) {
+    return <MarvelCharacterCell
+      item={ item }
+      onSelect={ (character) => this.onMarvelSelect(character) }
+    />
   }
 
   render() {
     return (
       <View style={styles.container}>
         <SectionList
-          renderSectionHeader={ ({section}) => 
-            <View style={ styles.headerSectionContainer }>
-              <Text style={ styles.headerSectionText }>{section.title}</Text>
-            </View>
-          }
+          renderSectionHeader={ ({section}) => this.renderSectionHeader(section) }
           renderSectionFooter={ ({section}) => this.renderSectionFooter(section) }
           sections={[
             { data: this.props.customList, 
