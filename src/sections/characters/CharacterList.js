@@ -8,10 +8,9 @@ import * as CharactersActions from 'react_marvel/src/redux/actions/characters'
 /*******************/
 
 import { Colors } from 'react_marvel/src/commons'
+import { Spinner } from 'react_marvel/src/widgets'
 import CustomCharacterCell from './custom/CharacterCell'
 import MarvelCharacterCell from './marvel/CharacterCell'
-
-var Spinner = require('react-native-spinkit')
 
 
 export class CharactersList extends Component {
@@ -59,27 +58,17 @@ export class CharactersList extends Component {
 
   renderCustomFooter() {
     return (
-      <View style={styles.spinnerContainer}>
-        <Spinner
-          isVisible={ this.props.isCustomFetching }
-          size={ 50 }
-          type={ 'Pulse' }
-          color={ 'white' }
-        />
-      </View>
+      <Spinner 
+        isVisible={ this.props.isCustomFetching }
+      />
     )
   }
 
   renderMarvelFooter() {
-    return (
-      <View style={styles.spinnerContainer}>
-        <Spinner
-          isVisible={ this.props.isFetching }
-          size={ 50 }
-          type={ 'Bounce' }
-          color={ 'white' }
-        />
-      </View>
+    return ( 
+      <Spinner 
+        isVisible={ this.props.isFetching }
+      />
     )
   }
 
@@ -171,8 +160,5 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: '600',
-  },
-  spinnerContainer: {
-    alignItems: 'center'
   }
 })
