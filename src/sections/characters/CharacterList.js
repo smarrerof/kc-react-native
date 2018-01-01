@@ -11,6 +11,8 @@ import { Colors } from 'react_marvel/src/commons'
 import CustomCharacterCell from './custom/CharacterCell'
 import MarvelCharacterCell from './marvel/CharacterCell'
 
+var Spinner = require('react-native-spinkit')
+
 
 export class CharactersList extends Component {
 
@@ -55,6 +57,39 @@ export class CharactersList extends Component {
     />
   }
 
+  renderCustomFooter() {
+    return (
+      <View style={styles.spinnerContainer}>
+        <Spinner
+          isVisible={ this.props.isCustomFetching }
+          size={ 50 }
+          type={ 'Pulse' }
+          color={ 'white' }
+        />
+      </View>
+    )
+  }
+
+  renderMarvelFooter() {
+    return (
+      <View style={styles.spinnerContainer}>
+        <Spinner
+          isVisible={ this.props.isFetching }
+          size={ 50 }
+          type={ 'Bounce' }
+          color={ 'white' }
+        />
+      </View>
+    )
+  }
+
+  renderSectionFooter(section) {
+    if (section.title === 'Custom')
+      return this.renderCustomFooter()
+    else if (section.title === 'Marvel')
+      return this.renderMarvelFooter();
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -64,6 +99,7 @@ export class CharactersList extends Component {
               <Text style={ styles.headerSectionText }>{section.title}</Text>
             </View>
           }
+          renderSectionFooter={ ({section}) => this.renderSectionFooter(section) }
           sections={[
             { data: this.props.customList, 
               title: "Custom", 
@@ -73,19 +109,11 @@ export class CharactersList extends Component {
             { data: this.props.list, 
               title: "Marvel", 
               renderItem: ({item}) => this.renderMarvelItem(item),
-              keyExtractor: (item) => item.id
+              keyExtractor: (item) => item.id,
             },
           ]}
           onEndReached={ this.onEndReached }
           onEndReachedThreshold={ 0.3 }
-          refreshControl={
-            <RefreshControl
-                refreshing  = { this.props.isFetching }
-                onRefresh   = { () => this.props.initCharactersList() }
-                colors      = { ['white'] }
-                tintColor   = { 'white' }
-            />
-          }
         />
       </View>
     )
@@ -94,29 +122,30 @@ export class CharactersList extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    isCustomFetching: state.characters.isCustomFetching,
+    customList: state.characters.customList,
+    isFetching: state.characters.isFetching,
     list: state.characters.list,
     total: state.characters.total,
-    offset: state.characters.offset,
-    customList: state.characters.customList,
-    isFetching: state.characters.isFetching
+    offset: state.characters.offset
   }
 }
 
 const mapDispatchToProps = (dispatch, props) => {
   return {
-    initCharactersList: () => {
-      dispatch(CharactersActions.initCharactersList())
-    },
-    fetchCharactersList: (offset) => {
-      dispatch(CharactersActions.updateCharactersListOffset(offset))
-      dispatch(CharactersActions.fetchCharactersList())
-    },
     fetchCustomCharactersList: () => {
       dispatch(CharactersActions.fetchCustomCharactersList())
     },
     updateCustomSelected: (character) => {
       dispatch(CharactersActions.updateCharacterSelected(character))
       Actions.CustomCharacterView({ title: character.name })
+    },
+    initCharactersList: () => {
+      dispatch(CharactersActions.initCharactersList())
+    },
+    fetchCharactersList: (offset) => {
+      dispatch(CharactersActions.updateCharactersListOffset(offset))
+      dispatch(CharactersActions.fetchCharactersList())
     },
     updateMarvelSelected: (character) => {
       dispatch(CharactersActions.updateCharacterSelected(character))
@@ -143,4 +172,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
+  spinnerContainer: {
+    alignItems: 'center'
+  }
 })

@@ -1,8 +1,11 @@
 import * as types from 'react_marvel/src/redux/types/characters'
 
 const initialState = {
-  isFetching: false,
+  // Custom
+  isCustomFetching: false,
   customList: [],
+  // Marvel
+  isFetching: false,
   list: [],
   total: 0,
   offset: 0,
@@ -34,6 +37,12 @@ export default function reducer(state = initialState, action = {}) {
           ...state,
           customList: action.customList
         };
+
+    case types.CHARACTERS_SET_CUSTOM_FETCHING:
+      return {
+        ...state,
+        isCustomFetching: action.value
+      };
 
     case types.CHARACTERS_SET_FETCHING:
       return {

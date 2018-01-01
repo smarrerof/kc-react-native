@@ -27,6 +27,13 @@ export function updateCharactersListOffset(value) {
   }
 }
 
+function setCustomCharactersFetching(value) {
+  return {
+    type: types.CHARACTERS_SET_CUSTOM_FETCHING,
+    value
+  }
+}
+
 function setCharactersFetching(value) {
   return {
     type: types.CHARACTERS_SET_FETCHING,
@@ -115,14 +122,14 @@ export function fetchCharactersList() {
 
 export function fetchCustomCharactersList() {
   return (dispatch, getState) => {
-    dispatch(setCharactersFetching(true))
+    dispatch(setCustomCharactersFetching(true))
 
     const fetchUrl = '/characters'
 
     console.log('CharactersList', fetchUrl)
     fetch(fetchUrl, constants.BASE_CUSTOM)
       .then(response => {
-        dispatch(setCharactersFetching(false))
+        dispatch(setCustomCharactersFetching(false))
 
         console.log('CharactersList response', response)
 
@@ -136,7 +143,7 @@ export function fetchCustomCharactersList() {
         dispatch(updateCustomCharactersList(list))
       })
       .catch(error => {
-        dispatch(setCharactersFetching(false))
+        dispatch(setCustomCharactersFetching(false))
         console.error('CharactersList error', error)
       })
   }
