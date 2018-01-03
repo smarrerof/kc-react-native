@@ -16,7 +16,8 @@ export class CharacterView extends Component {
     this.props.initCharacterComicList()
     this.props.initCharacterEventList()
     this.props.initCharacterSerieList()
-    this.props.fetchCharacterExtra()
+    this.props.initCharacterStoryList()
+    //this.props.fetchCharacterExtra()
   }
 
   loadMore(section) {
@@ -26,16 +27,25 @@ export class CharacterView extends Component {
           const newOffset = this.props.comics.offset + 10
           this.props.fetchCharacterComicList(newOffset)
         }
+        break;
       case "Events":
         if (this.props.events.list.length < this.props.events.total && !this.props.events.isFetching) {
           const newOffset = this.props.events.offset + 10
-          this.props.fetchCharacterComicList(newOffset)
+          this.props.fetchCharacterEventList(newOffset)
         }
+        break;
       case "Series":
         if (this.props.series.list.length < this.props.series.total && !this.props.series.isFetching) {
           const newOffset = this.props.series.offset + 10
-          this.props.fetchCharacterComicList(newOffset)
+          this.props.fetchCharacterSerieList(newOffset)
         }
+        break;
+      case "Stories":
+        if (this.props.stories.list.length < this.props.stories.total && !this.props.stories.isFetching) {
+          const newOffset = this.props.stories.offset + 10
+          this.props.fetchCharacterStoryList(newOffset)
+        }
+        break;
       default: 
         break;
     }
@@ -91,6 +101,21 @@ export class CharacterView extends Component {
                 containerStyle={ styles.buttonContainerStyle }
                 label={ 'Load more' }
                 isFetching={ this.props.series.isFetching }
+                onPress={ () => this.loadMore(section) }
+              />
+            }
+          </View>
+        )
+      case "Stories":
+        return (
+          <View>
+            {
+              (this.props.stories.list.length === 0 ||
+              this.props.stories.list.length < this.props.stories.total) &&
+              <Button
+                containerStyle={ styles.buttonContainerStyle }
+                label={ 'Load more' }
+                isFetching={ this.props.stories.isFetching }
                 onPress={ () => this.loadMore(section) }
               />
             }
@@ -161,7 +186,7 @@ export class CharacterView extends Component {
                 renderItem: ({item}) => this.renderItemImageText(item),
                 keyExtractor: (item) => item.id  
               },
-              { data: this.props.stories, 
+              { data: this.props.stories.list, 
                 title: "Stories", 
                 renderItem: ({item}) => this.renderItemText(item),
                 keyExtractor: (item) => item.id  
@@ -176,12 +201,10 @@ export class CharacterView extends Component {
 
 const mapStateToProps = (state) => {
   return {
-      character: state.characters.item,
-      
+      character: state.characters.item,    
       comics: state.characters.comics,
       events: state.characters.events,
       series: state.characters.series,
-
       stories: state.characters.stories
   }
 }
@@ -208,6 +231,13 @@ const mapDispatchToProps = (dispatch, props) => {
     fetchCharacterSerieList: (offset) => {
       dispatch(CharactersActions.updateCharacterSerieListOffset(offset))
       dispatch(CharactersActions.fetchCharacterSerieList())
+    },
+    initCharacterStoryList: () => {
+      dispatch(CharactersActions.initCharacterStoryList())
+    },
+    fetchCharacterStoryList: (offset) => {
+      dispatch(CharactersActions.updateCharacterStoryListOffset(offset))
+      dispatch(CharactersActions.fetchCharacterStoryList())
     },
 
     fetchCharacterExtra: () => {

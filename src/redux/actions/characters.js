@@ -371,6 +371,76 @@ export function fetchCharacterSerieList() {
 }
 
 
+// Character story list
+function setCharacterStoryListFetching(value) {
+  return {
+    type: types.CHARACTERS_SET_CHARACTER_STORY_LIST_FETCHING,
+    value
+  }
+}
+
+export function initCharacterStoryList() {
+  return (dispatch, getState) => {
+    // Reset character list and set total to 0
+    dispatch(updateCharacterStoryList([], 0))
+
+    // Set offset to 0
+    dispatch(updateCharacterStoryListOffset(0))
+
+    // Fetch list
+    dispatch(fetchCharacterStoryList())
+  }
+}
+
+function updateCharacterStoryList(list, total) {
+  return {
+    type: types.CHARACTERS_UPDATE_CHARACTER_STORY_LIST,
+    list: list,
+    total: total
+  }
+}
+
+export function updateCharacterStoryListOffset(value) {
+  return {
+    type: types.CHARACTERS_UPDATE_CHARACTER_STORY_LIST_OFFSET,
+    value
+  }
+}
+
+export function fetchCharacterStoryList() {
+  return (dispatch, getState) => {
+    dispatch(setCharacterStoryListFetching(true))
+
+    const state = getState()
+    const character = state.characters.item
+    const list = state.characters.stories.list
+    const offset = state.characters.stories.offset
+    const limit = 10
+
+    const fetchUrl = character.stories.collectionURI.replace('http', 'https') + '?ts=1234&apikey=a3ce93a8401b1219c18b9ca8310e1abc&hash=5742e01f78129797c6cc8aca0ec8f005&offset='+offset+'&limit='+limit
+
+    console.log('StoryList', fetchUrl)
+    fetch(fetchUrl)
+      .then(response => {
+        dispatch(setCharacterStoryListFetching(false))
+
+        const _list = response && response.data && response.data.results ? response.data.results : []
+        const total = response && response.data ? response.data.total : 0
+        console.log('StoryList response', response)
+
+        // Concat list and _list
+        const newList = [...list, ..._list]
+
+        dispatch(updateCharacterStoryList(newList, total))
+      })
+      .catch(error => {
+        dispatch(setCharacterStoryListFetching(false))
+        console.error('StoryList error', error)
+      })
+  }
+}
+
+
 // post and delete custom characters
 export function postCharacter(character) {
   return (dispatch, getState) => {
