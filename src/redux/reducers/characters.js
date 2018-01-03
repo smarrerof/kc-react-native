@@ -1,18 +1,32 @@
 import * as types from 'react_marvel/src/redux/types/characters'
 
 const initialState = {
-  // Custom
+  // CharacterList: Custom list
   isCustomFetching: false,
   customList: [],
-  // Marvel
+
+  // CharacterList: Marvel list
   isFetching: false,
   list: [],
   total: 0,
   offset: 0,
+
+  // CharacterList & CharacterView: Selected item
   item: null,
+  
+  // Marvel CharacterView: Comic list
   comics: [],
+  isComicsFetching: false,
+  comicsTotal: 0,
+  comicsOffset: 0,
+
+  // Marvel CharacterView: Event list
   events: [],
+
+  // Marvel CharacterView: Series list
   series: [],
+
+  // Marvel CharacterView: Stories list
   stories: []
 }
 
@@ -56,10 +70,23 @@ export default function reducer(state = initialState, action = {}) {
         item: action.value
       };
 
-    case types.CHARACTERS_UPDATE_EXTRA_COMICS:
+    case types.CHARACTERS_SET_COMIC_LIST_FETCHING:
       return {
         ...state,
-        comics: action.value
+        isComicsFetching: action.value
+      }
+
+    case types.CHARACTERS_UPDATE_CHARACTER_COMIC_LIST:
+      return {
+        ...state,
+        comics: action.list,
+        comicsTotal: action.total
+      };
+    
+    case types.CHARACTERS_UPDATE_CHARACTER_COMIC_LIST_OFFSET:
+      return {
+        ...state,
+        comicsOffset: action.value
       };
 
     case types.CHARACTERS_UPDATE_EXTRA_EVENTS:

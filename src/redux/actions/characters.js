@@ -41,9 +41,33 @@ function setCharactersFetching(value) {
   }
 }
 
+function setCharacterComicListFetching(value) {
+  console.log('setCharacterComicListFetching', value)
+  return {
+    type: types.CHARACTERS_SET_COMIC_LIST_FETCHING,
+    value
+  }
+}
+
+
 function updateCharacterExtra(type, value) {
   return {
     type,
+    value
+  }
+}
+
+function updateCharacterComicList(list, total) {
+  return {
+    type: types.CHARACTERS_UPDATE_CHARACTER_COMIC_LIST,
+    list: list,
+    total: total
+  }
+}
+
+export function updateCharacterComicListOffset(value) {
+  return {
+    type: types.CHARACTERS_UPDATE_CHARACTER_COMIC_LIST_OFFSET,
     value
   }
 }
@@ -98,8 +122,6 @@ export function fetchCharactersList() {
     const limit = 10
 
     const fetchUrl = '/characters?ts=1234&apikey=a3ce93a8401b1219c18b9ca8310e1abc&hash=5742e01f78129797c6cc8aca0ec8f005&offset='+offset+'&limit='+limit
-
-    console.log('CharactersList', fetchUrl)
     fetch(fetchUrl)
       .then(response => {
         dispatch(setCharactersFetching(false))
@@ -125,8 +147,6 @@ export function fetchCustomCharactersList() {
     dispatch(setCustomCharactersFetching(true))
 
     const fetchUrl = '/characters'
-
-    console.log('CharactersList', fetchUrl)
     fetch(fetchUrl, constants.BASE_CUSTOM)
       .then(response => {
         dispatch(setCustomCharactersFetching(false))
@@ -153,15 +173,63 @@ export function fetchCharacterExtra() {
   return (dispatch, getState) => {
     const character = getState().characters.item
   
-    const comicsUrl = character.comics.collectionURI.replace('http', 'https') + '?ts=1234&apikey=a3ce93a8401b1219c18b9ca8310e1abc&hash=5742e01f78129797c6cc8aca0ec8f005'
+    //const comicsUrl = character.comics.collectionURI.replace('http', 'https') + '?ts=1234&apikey=a3ce93a8401b1219c18b9ca8310e1abc&hash=5742e01f78129797c6cc8aca0ec8f005'
     const eventsUrl = character.events.collectionURI.replace('http', 'https') + '?ts=1234&apikey=a3ce93a8401b1219c18b9ca8310e1abc&hash=5742e01f78129797c6cc8aca0ec8f005'
     const seriesUrl = character.series.collectionURI.replace('http', 'https') + '?ts=1234&apikey=a3ce93a8401b1219c18b9ca8310e1abc&hash=5742e01f78129797c6cc8aca0ec8f005'
     const storiesUrl = character.stories.collectionURI.replace('http', 'https') + '?ts=1234&apikey=a3ce93a8401b1219c18b9ca8310e1abc&hash=5742e01f78129797c6cc8aca0ec8f005'
 
-    fetchData(dispatch, comicsUrl, types.CHARACTERS_UPDATE_EXTRA_COMICS)
+    //fetchData(dispatch, comicsUrl, types.CHARACTERS_UPDATE_EXTRA_COMICS)
     fetchData(dispatch, eventsUrl, types.CHARACTERS_UPDATE_EXTRA_EVENTS)
     fetchData(dispatch, seriesUrl, types.CHARACTERS_UPDATE_EXTRA_SERIES)
     fetchData(dispatch, storiesUrl, types.CHARACTERS_UPDATE_EXTRA_STORIES)
+  }
+}
+
+export function initCharacterComicList() {
+  return (dispatch, getState) => {
+    // Reset character list and set total to 0
+    dispatch(updateCharacterComicList([], 0))
+
+    // Set offset to 0
+    dispatch(updateCharacterComicListOffset(0))
+
+    // Fetch list
+    dispatch(fetchCharacterComicList())
+  }
+}
+
+export function fetchCharacterComicList() {
+  return (dispatch, getState) => {
+    dispatch(setCharacterComicListFetching(true))
+
+    const state = getState()
+    const character = state.characters.item
+    const list = state.characters.comics
+    const offset = state.characters.comicsOffset
+    const limit = 10
+
+    const fetchUrl = character.comics.collectionURI.replace('http', 'https') + '?ts=1234&apikey=a3ce93a8401b1219c18b9ca8310e1abc&hash=5742e01f78129797c6cc8aca0ec8f005&offset='+offset+'&limit='+limit
+
+    console.log('ComicList', fetchUrl)
+    fetch(fetchUrl)
+      .then(response => {
+        dispatch(setCharacterComicListFetching(false))
+
+        const _list = response && response.data && response.data.results ? response.data.results : []
+        const total = response && response.data ? response.data.total : 0
+        console.log('ComicList response', response)
+
+        // Concat list and _list
+        const newList = [...list, ..._list]
+
+        dispatch(updateCharacterComicList(newList, total))
+      })
+      .catch(error => {
+        dispatch(setCharacterComicListFetching(false))
+        console.error('ComicList error', error)
+      })
+
+    
   }
 }
 

@@ -37,7 +37,7 @@ export class CharactersList extends Component {
 
   onEndReached() {
     if (this.props.list.length < this.props.total && !this.props.isFetching) {
-      let newOffset = this.props.offset + 10
+      const newOffset = this.props.offset + 10
       this.props.fetchCharactersList(newOffset)
     }
   }

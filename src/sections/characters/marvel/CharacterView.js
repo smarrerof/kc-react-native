@@ -8,16 +8,57 @@ import * as CharactersActions from 'react_marvel/src/redux/actions/characters'
 /*******************/
 
 import { Colors } from 'react_marvel/src/commons'
-
+import { Button } from 'react_marvel/src/widgets'
 
 export class CharacterView extends Component {
 
   componentWillMount() {
-    this.props.fetchCharacterExtra();
+    this.props.initCharacterComicList()
+    this.props.fetchCharacterExtra()
+  }
+
+  loadMore(section) {
+    switch (section.title) {
+      case "Comics":
+        if (this.props.comics.length < this.props.comicsTotal && !this.props.isComicsFetching) {
+          const newOffset = this.props.comicsOffset + 10
+          this.props.fetchCharacterComicList(newOffset)
+        }
+      default: 
+        break;
+    }
   }
 
   renderSectionHeader(section) {
+    return (
+      <View style={ styles.headerSectionContainer }>
+        <Text style={ styles.headerSectionText }>{section.title}</Text>
+      </View>
+    )
+  }
 
+  renderSectionFooter(section) {
+    switch (section.title) {
+      case "Comics":
+        return (
+          <View>
+            {
+              this.props.comics.length < this.props.comicsTotal &&
+              <Button
+                containerStyle={ styles.buttonContainerStyle }
+                label={ 'Load more' }
+                isFetching={ this.props.isComicsFetching }
+                onPress={ () => this.loadMore(section) }
+              />
+            }
+          </View>
+        )
+      default:
+        return (
+          <View>
+          </View>
+        )
+    }
   }
 
   renderItemImageText(item) {
@@ -49,8 +90,7 @@ export class CharacterView extends Component {
     const description = character && character.description !== '' ? character.description : 'No description available'
    
     return (
-      <ScrollView>
-      <View style={ styles.container } >
+      <ScrollView style={ styles.container } >
         <Image source={ image } style={ styles.image } resizeMode={ 'cover' } />
         <View style={ styles.textContainer }>
           <Text style={ styles.name }>{ name }</Text>
@@ -60,43 +100,32 @@ export class CharacterView extends Component {
         </View>
         <View style={ styles.textContainer }>
           <SectionList 
-            renderSectionHeader={ ({section}) => 
-              <View style={ styles.headerSectionContainer }>
-                <Text style={ styles.headerSectionText }>{section.title}</Text>
-              </View>
-            }
-            renderSectionFooter={ ({section}) => 
-              <View>
-                <Text style={ styles.headerSectionText }>{'Load more'}</Text>
-              </View>
-            }
-            renderItem={ ({item}) => 
-              <View style={ styles.itemContainer }>
-                <Text style={ styles.itemText }>{ item.title }</Text>
-              </View> 
-            }
+            renderSectionHeader={ ({section}) => this.renderSectionHeader(section) }
+            renderSectionFooter={ ({section}) => this.renderSectionFooter(section) }
             sections={[
               { data: this.props.comics, 
                 title: "Comics", 
-                renderItem: ({item}) => this.renderItemImageText(item),keyExtractor: (item) => item.id 
+                renderItem: ({item}) => this.renderItemImageText(item),
+                keyExtractor: (item) => item.id 
               },
               { data: this.props.events, 
                 title: "Events", 
-                renderItem: ({item}) => this.renderItemImageText(item),keyExtractor: (item) => item.id  
+                renderItem: ({item}) => this.renderItemImageText(item),
+                keyExtractor: (item) => item.id  
               },
               { data: this.props.series, 
                 title: "Series", 
-                renderItem: ({item}) => this.renderItemImageText(item),keyExtractor: (item) => item.id  
+                renderItem: ({item}) => this.renderItemImageText(item),
+                keyExtractor: (item) => item.id  
               },
               { data: this.props.stories, 
                 title: "Stories", 
-                renderItem: ({item}) => this.renderItemText(item),keyExtractor: (item) => item.id  
+                renderItem: ({item}) => this.renderItemText(item),
+                keyExtractor: (item) => item.id  
               }
             ]}
-            
           />
         </View>
-      </View>
       </ScrollView>
     )
   }
@@ -105,7 +134,12 @@ export class CharacterView extends Component {
 const mapStateToProps = (state) => {
   return {
       character: state.characters.item,
+      
       comics: state.characters.comics,
+      isComicsFetching: state.characters.isComicsFetching,
+      comicsTotal: state.characters.comicsTotal,
+      comicsOffset: state.characters.comicsOffset,
+      
       events: state.characters.events,
       series: state.characters.series,
       stories: state.characters.stories
@@ -114,6 +148,13 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, props) => {
   return {
+    initCharacterComicList: () => {
+      dispatch(CharactersActions.initCharacterComicList())
+    },
+    fetchCharacterComicList: (offset) => {
+      dispatch(CharactersActions.updateCharacterComicListOffset(offset))
+      dispatch(CharactersActions.fetchCharacterComicList())
+    },
     fetchCharacterExtra: () => {
       dispatch(CharactersActions.fetchCharacterExtra())
     }
@@ -173,5 +214,9 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 10,
     fontWeight: '600'
+  },
+  // Button style
+  buttonContainerStyle: {
+    backgroundColor: 'gray'
   }
 })

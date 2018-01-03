@@ -4,9 +4,9 @@ import { TouchableOpacity, Text, ActivityIndicator, StyleSheet } from 'react-nat
 export default class Button extends Component {
 
   static defaultProps = {
-    labelStyle: {},
     containerStyle: {},
-
+    labelStyle: {},
+    
     label: '',
     onPress: () => { },
     isFetching: false
