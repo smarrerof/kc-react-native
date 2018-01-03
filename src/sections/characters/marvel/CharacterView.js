@@ -15,6 +15,7 @@ export class CharacterView extends Component {
   componentWillMount() {
     this.props.initCharacterComicList()
     this.props.initCharacterEventList()
+    this.props.initCharacterSerieList()
     this.props.fetchCharacterExtra()
   }
 
@@ -28,6 +29,11 @@ export class CharacterView extends Component {
       case "Events":
         if (this.props.events.list.length < this.props.events.total && !this.props.events.isFetching) {
           const newOffset = this.props.events.offset + 10
+          this.props.fetchCharacterComicList(newOffset)
+        }
+      case "Series":
+        if (this.props.series.list.length < this.props.series.total && !this.props.series.isFetching) {
+          const newOffset = this.props.series.offset + 10
           this.props.fetchCharacterComicList(newOffset)
         }
       default: 
@@ -70,6 +76,21 @@ export class CharacterView extends Component {
                 containerStyle={ styles.buttonContainerStyle }
                 label={ 'Load more' }
                 isFetching={ this.props.events.isFetching }
+                onPress={ () => this.loadMore(section) }
+              />
+            }
+          </View>
+        )
+      case "Series":
+        return (
+          <View>
+            {
+              (this.props.series.list.length === 0 ||
+              this.props.series.list.length < this.props.series.total) &&
+              <Button
+                containerStyle={ styles.buttonContainerStyle }
+                label={ 'Load more' }
+                isFetching={ this.props.series.isFetching }
                 onPress={ () => this.loadMore(section) }
               />
             }
@@ -135,7 +156,7 @@ export class CharacterView extends Component {
                 renderItem: ({item}) => this.renderItemImageText(item),
                 keyExtractor: (item) => item.id  
               },
-              { data: this.props.series, 
+              { data: this.props.series.list, 
                 title: "Series", 
                 renderItem: ({item}) => this.renderItemImageText(item),
                 keyExtractor: (item) => item.id  
@@ -159,8 +180,8 @@ const mapStateToProps = (state) => {
       
       comics: state.characters.comics,
       events: state.characters.events,
-
       series: state.characters.series,
+
       stories: state.characters.stories
   }
 }
@@ -181,6 +202,14 @@ const mapDispatchToProps = (dispatch, props) => {
       dispatch(CharactersActions.updateCharacterEventListOffset(offset))
       dispatch(CharactersActions.fetchCharacterEventList())
     },
+    initCharacterSerieList: () => {
+      dispatch(CharactersActions.initCharacterSerieList())
+    },
+    fetchCharacterSerieList: (offset) => {
+      dispatch(CharactersActions.updateCharacterSerieListOffset(offset))
+      dispatch(CharactersActions.fetchCharacterSerieList())
+    },
+
     fetchCharacterExtra: () => {
       dispatch(CharactersActions.fetchCharacterExtra())
     }
@@ -243,6 +272,7 @@ const styles = StyleSheet.create({
   },
   // Button style
   buttonContainerStyle: {
-    backgroundColor: 'gray'
+    backgroundColor: 'gray',
+    marginTop: 10
   }
 })

@@ -30,8 +30,13 @@ const initialState = {
     offset: 0,
   },
 
-  // Marvel CharacterView: Series list
-  series: [],
+  // Marvel CharacterView: Serie list
+  series: {
+    list: [],
+    isFetching: false,
+    total: 0,
+    offset: 0,
+  },
 
   // Marvel CharacterView: Stories list
   stories: []
@@ -136,7 +141,34 @@ export default function reducer(state = initialState, action = {}) {
         }
       }
 
+    // Character serie list
+    case types.CHARACTERS_SET_CHARACTER_SERIE_LIST_FETCHING:
+      return {
+        ...state,
+        series: {
+          ...state.series,
+          isFetching: action.value
+        }
+      }
 
+    case types.CHARACTERS_UPDATE_CHARACTER_SERIE_LIST:
+      return {
+        ...state,
+        series: {
+          ...state.series,
+          list: action.list,
+          total: action.total 
+        }
+      }
+    
+    case types.CHARACTERS_UPDATE_CHARACTER_SERIE_LIST_OFFSET:
+      return {
+        ...state,
+        series: {
+          ...state.series,
+          offset: action.value
+        }
+      }
 
 
 

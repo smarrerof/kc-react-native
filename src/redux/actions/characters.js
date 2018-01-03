@@ -301,6 +301,76 @@ export function fetchCharacterEventList() {
 }
 
 
+// Character serie list
+function setCharacterSerieListFetching(value) {
+  return {
+    type: types.CHARACTERS_SET_CHARACTER_SERIE_LIST_FETCHING,
+    value
+  }
+}
+
+export function initCharacterSerieList() {
+  return (dispatch, getState) => {
+    // Reset character list and set total to 0
+    dispatch(updateCharacterSerieList([], 0))
+
+    // Set offset to 0
+    dispatch(updateCharacterSerieListOffset(0))
+
+    // Fetch list
+    dispatch(fetchCharacterSerieList())
+  }
+}
+
+function updateCharacterSerieList(list, total) {
+  return {
+    type: types.CHARACTERS_UPDATE_CHARACTER_SERIE_LIST,
+    list: list,
+    total: total
+  }
+}
+
+export function updateCharacterSerieListOffset(value) {
+  return {
+    type: types.CHARACTERS_UPDATE_CHARACTER_SERIE_LIST_OFFSET,
+    value
+  }
+}
+
+export function fetchCharacterSerieList() {
+  return (dispatch, getState) => {
+    dispatch(setCharacterSerieListFetching(true))
+
+    const state = getState()
+    const character = state.characters.item
+    const list = state.characters.series.list
+    const offset = state.characters.series.offset
+    const limit = 10
+
+    const fetchUrl = character.series.collectionURI.replace('http', 'https') + '?ts=1234&apikey=a3ce93a8401b1219c18b9ca8310e1abc&hash=5742e01f78129797c6cc8aca0ec8f005&offset='+offset+'&limit='+limit
+
+    console.log('SerieList', fetchUrl)
+    fetch(fetchUrl)
+      .then(response => {
+        dispatch(setCharacterSerieListFetching(false))
+
+        const _list = response && response.data && response.data.results ? response.data.results : []
+        const total = response && response.data ? response.data.total : 0
+        console.log('SerieList response', response)
+
+        // Concat list and _list
+        const newList = [...list, ..._list]
+
+        dispatch(updateCharacterSerieList(newList, total))
+      })
+      .catch(error => {
+        dispatch(setCharacterSerieListFetching(false))
+        console.error('SerieList error', error)
+      })
+  }
+}
+
+
 // post and delete custom characters
 export function postCharacter(character) {
   return (dispatch, getState) => {
