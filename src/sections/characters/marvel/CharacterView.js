@@ -20,8 +20,8 @@ export class CharacterView extends Component {
   loadMore(section) {
     switch (section.title) {
       case "Comics":
-        if (this.props.comics.length < this.props.comicsTotal && !this.props.isComicsFetching) {
-          const newOffset = this.props.comicsOffset + 10
+        if (this.props.comics.list.length < this.props.comics.total && !this.props.comics.isFetching) {
+          const newOffset = this.props.comics.offset + 10
           this.props.fetchCharacterComicList(newOffset)
         }
       default: 
@@ -43,11 +43,12 @@ export class CharacterView extends Component {
         return (
           <View>
             {
-              this.props.comics.length < this.props.comicsTotal &&
+              (this.props.comics.list.length === 0 ||
+              this.props.comics.list.length < this.props.comics.total) &&
               <Button
                 containerStyle={ styles.buttonContainerStyle }
                 label={ 'Load more' }
-                isFetching={ this.props.isComicsFetching }
+                isFetching={ this.props.comics.isFetching }
                 onPress={ () => this.loadMore(section) }
               />
             }
@@ -88,7 +89,7 @@ export class CharacterView extends Component {
     const image = character ? { uri: `${character.thumbnail.path.replace('http', 'https')}/landscape_large.${character.thumbnail.extension}` } : null
     const name = character && character.name !== '' ? character.name : 'No name available'
     const description = character && character.description !== '' ? character.description : 'No description available'
-   
+
     return (
       <ScrollView style={ styles.container } >
         <Image source={ image } style={ styles.image } resizeMode={ 'cover' } />
@@ -103,7 +104,7 @@ export class CharacterView extends Component {
             renderSectionHeader={ ({section}) => this.renderSectionHeader(section) }
             renderSectionFooter={ ({section}) => this.renderSectionFooter(section) }
             sections={[
-              { data: this.props.comics, 
+              { data: this.props.comics.list, 
                 title: "Comics", 
                 renderItem: ({item}) => this.renderItemImageText(item),
                 keyExtractor: (item) => item.id 
@@ -136,9 +137,6 @@ const mapStateToProps = (state) => {
       character: state.characters.item,
       
       comics: state.characters.comics,
-      isComicsFetching: state.characters.isComicsFetching,
-      comicsTotal: state.characters.comicsTotal,
-      comicsOffset: state.characters.comicsOffset,
       
       events: state.characters.events,
       series: state.characters.series,

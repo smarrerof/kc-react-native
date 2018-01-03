@@ -15,11 +15,13 @@ const initialState = {
   item: null,
   
   // Marvel CharacterView: Comic list
-  comics: [],
-  isComicsFetching: false,
-  comicsTotal: 0,
-  comicsOffset: 0,
-
+  comics: {
+    list: [],
+    isFetching: false,
+    total: 0,
+    offset: 0,
+  },
+  
   // Marvel CharacterView: Event list
   events: [],
 
@@ -38,56 +40,73 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         list: action.list,
         total: action.total
-      };
+      }
 
     case types.CHARACTERS_UPDATE_LIST_OFFSET:
       return {
         ...state,
         offset: action.value
-      };
+      }
 
       case types.CHARACTERS_UPDATE_CUSTOM_LIST:
         return {
           ...state,
           customList: action.customList
-        };
+        }
 
     case types.CHARACTERS_SET_CUSTOM_FETCHING:
       return {
         ...state,
         isCustomFetching: action.value
-      };
+      }
 
     case types.CHARACTERS_SET_FETCHING:
       return {
         ...state,
         isFetching: action.value
-      };
+      }
 
     case types.CHARACTERS_UPDATE_CHARACTER:
       return {
         ...state,
         item: action.value
-      };
+      }
 
-    case types.CHARACTERS_SET_COMIC_LIST_FETCHING:
+    // Character comic list
+    case types.CHARACTERS_SET_CHARACTER_COMIC_LIST_FETCHING:
       return {
         ...state,
-        isComicsFetching: action.value
+        comics: {
+          ...state.comics,
+          isFetching: action.value
+        }
       }
 
     case types.CHARACTERS_UPDATE_CHARACTER_COMIC_LIST:
       return {
         ...state,
-        comics: action.list,
-        comicsTotal: action.total
-      };
+        comics: {
+          ...state.comics,
+          list: action.list,
+          total: action.total 
+        }
+      }
     
     case types.CHARACTERS_UPDATE_CHARACTER_COMIC_LIST_OFFSET:
       return {
         ...state,
-        comicsOffset: action.value
-      };
+        comics: {
+          ...state.comics,
+          offset: action.value
+        }
+      }
+
+
+
+
+
+
+
 
     case types.CHARACTERS_UPDATE_EXTRA_EVENTS:
       return {

@@ -41,37 +41,12 @@ function setCharactersFetching(value) {
   }
 }
 
-function setCharacterComicListFetching(value) {
-  console.log('setCharacterComicListFetching', value)
-  return {
-    type: types.CHARACTERS_SET_COMIC_LIST_FETCHING,
-    value
-  }
-}
-
-
 function updateCharacterExtra(type, value) {
   return {
     type,
     value
   }
 }
-
-function updateCharacterComicList(list, total) {
-  return {
-    type: types.CHARACTERS_UPDATE_CHARACTER_COMIC_LIST,
-    list: list,
-    total: total
-  }
-}
-
-export function updateCharacterComicListOffset(value) {
-  return {
-    type: types.CHARACTERS_UPDATE_CHARACTER_COMIC_LIST_OFFSET,
-    value
-  }
-}
-
 
 function fetchData(dispatch, fetchUrl, type) {
   dispatch(setCharactersFetching(true))
@@ -90,7 +65,6 @@ function fetchData(dispatch, fetchUrl, type) {
       console.error('CharacterExtra', type, 'error', error)
     })  
 }
-
 
 export function updateCharacterSelected(value) {
   return {
@@ -179,9 +153,18 @@ export function fetchCharacterExtra() {
     const storiesUrl = character.stories.collectionURI.replace('http', 'https') + '?ts=1234&apikey=a3ce93a8401b1219c18b9ca8310e1abc&hash=5742e01f78129797c6cc8aca0ec8f005'
 
     //fetchData(dispatch, comicsUrl, types.CHARACTERS_UPDATE_EXTRA_COMICS)
-    fetchData(dispatch, eventsUrl, types.CHARACTERS_UPDATE_EXTRA_EVENTS)
+    
+    /*fetchData(dispatch, eventsUrl, types.CHARACTERS_UPDATE_EXTRA_EVENTS)
     fetchData(dispatch, seriesUrl, types.CHARACTERS_UPDATE_EXTRA_SERIES)
-    fetchData(dispatch, storiesUrl, types.CHARACTERS_UPDATE_EXTRA_STORIES)
+    fetchData(dispatch, storiesUrl, types.CHARACTERS_UPDATE_EXTRA_STORIES)*/
+  }
+}
+
+// Character comic list
+function setCharacterComicListFetching(value) {
+  return {
+    type: types.CHARACTERS_SET_CHARACTER_COMIC_LIST_FETCHING,
+    value
   }
 }
 
@@ -198,14 +181,29 @@ export function initCharacterComicList() {
   }
 }
 
+function updateCharacterComicList(list, total) {
+  return {
+    type: types.CHARACTERS_UPDATE_CHARACTER_COMIC_LIST,
+    list: list,
+    total: total
+  }
+}
+
+export function updateCharacterComicListOffset(value) {
+  return {
+    type: types.CHARACTERS_UPDATE_CHARACTER_COMIC_LIST_OFFSET,
+    value
+  }
+}
+
 export function fetchCharacterComicList() {
   return (dispatch, getState) => {
     dispatch(setCharacterComicListFetching(true))
 
     const state = getState()
     const character = state.characters.item
-    const list = state.characters.comics
-    const offset = state.characters.comicsOffset
+    const list = state.characters.comics.list
+    const offset = state.characters.comics.offset
     const limit = 10
 
     const fetchUrl = character.comics.collectionURI.replace('http', 'https') + '?ts=1234&apikey=a3ce93a8401b1219c18b9ca8310e1abc&hash=5742e01f78129797c6cc8aca0ec8f005&offset='+offset+'&limit='+limit
@@ -233,6 +231,8 @@ export function fetchCharacterComicList() {
   }
 }
 
+
+// post and delete custom characters
 export function postCharacter(character) {
   return (dispatch, getState) => {
     dispatch(setCharactersFetching(true))
