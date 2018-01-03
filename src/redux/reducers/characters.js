@@ -206,25 +206,6 @@ export default function reducer(state = initialState, action = {}) {
         }
       }
 
-
-    case types.CHARACTERS_UPDATE_EXTRA_EVENTS:
-      return {
-        ...state,
-        events: action.value
-      };
-
-    case types.CHARACTERS_UPDATE_EXTRA_SERIES:
-      return {
-        ...state,
-        series: action.value
-      };
-
-    case types.CHARACTERS_UPDATE_EXTRA_STORIES:
-      return {
-        ...state,
-        stories: action.value
-      };
-
       default:
         return state;
   }

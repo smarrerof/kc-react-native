@@ -17,7 +17,6 @@ export class CharacterView extends Component {
     this.props.initCharacterEventList()
     this.props.initCharacterSerieList()
     this.props.initCharacterStoryList()
-    //this.props.fetchCharacterExtra()
   }
 
   loadMore(section) {
@@ -238,10 +237,6 @@ const mapDispatchToProps = (dispatch, props) => {
     fetchCharacterStoryList: (offset) => {
       dispatch(CharactersActions.updateCharacterStoryListOffset(offset))
       dispatch(CharactersActions.fetchCharacterStoryList())
-    },
-
-    fetchCharacterExtra: () => {
-      dispatch(CharactersActions.fetchCharacterExtra())
     }
   }
 }
