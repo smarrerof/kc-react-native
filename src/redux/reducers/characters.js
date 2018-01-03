@@ -23,7 +23,12 @@ const initialState = {
   },
   
   // Marvel CharacterView: Event list
-  events: [],
+  events: {
+    list: [],
+    isFetching: false,
+    total: 0,
+    offset: 0,
+  },
 
   // Marvel CharacterView: Series list
   series: [],
@@ -102,6 +107,34 @@ export default function reducer(state = initialState, action = {}) {
       }
 
 
+    // Character event list
+    case types.CHARACTERS_SET_CHARACTER_EVENT_LIST_FETCHING:
+      return {
+        ...state,
+        events: {
+          ...state.events,
+          isFetching: action.value
+        }
+      }
+
+    case types.CHARACTERS_UPDATE_CHARACTER_EVENT_LIST:
+      return {
+        ...state,
+        events: {
+          ...state.events,
+          list: action.list,
+          total: action.total 
+        }
+      }
+    
+    case types.CHARACTERS_UPDATE_CHARACTER_EVENT_LIST_OFFSET:
+      return {
+        ...state,
+        events: {
+          ...state.events,
+          offset: action.value
+        }
+      }
 
 
 

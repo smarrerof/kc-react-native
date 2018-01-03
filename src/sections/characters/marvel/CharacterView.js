@@ -14,6 +14,7 @@ export class CharacterView extends Component {
 
   componentWillMount() {
     this.props.initCharacterComicList()
+    this.props.initCharacterEventList()
     this.props.fetchCharacterExtra()
   }
 
@@ -22,6 +23,11 @@ export class CharacterView extends Component {
       case "Comics":
         if (this.props.comics.list.length < this.props.comics.total && !this.props.comics.isFetching) {
           const newOffset = this.props.comics.offset + 10
+          this.props.fetchCharacterComicList(newOffset)
+        }
+      case "Events":
+        if (this.props.events.list.length < this.props.events.total && !this.props.events.isFetching) {
+          const newOffset = this.props.events.offset + 10
           this.props.fetchCharacterComicList(newOffset)
         }
       default: 
@@ -49,6 +55,21 @@ export class CharacterView extends Component {
                 containerStyle={ styles.buttonContainerStyle }
                 label={ 'Load more' }
                 isFetching={ this.props.comics.isFetching }
+                onPress={ () => this.loadMore(section) }
+              />
+            }
+          </View>
+        )
+      case "Events":
+        return (
+          <View>
+            {
+              (this.props.events.list.length === 0 ||
+              this.props.events.list.length < this.props.events.total) &&
+              <Button
+                containerStyle={ styles.buttonContainerStyle }
+                label={ 'Load more' }
+                isFetching={ this.props.events.isFetching }
                 onPress={ () => this.loadMore(section) }
               />
             }
@@ -109,7 +130,7 @@ export class CharacterView extends Component {
                 renderItem: ({item}) => this.renderItemImageText(item),
                 keyExtractor: (item) => item.id 
               },
-              { data: this.props.events, 
+              { data: this.props.events.list, 
                 title: "Events", 
                 renderItem: ({item}) => this.renderItemImageText(item),
                 keyExtractor: (item) => item.id  
@@ -137,8 +158,8 @@ const mapStateToProps = (state) => {
       character: state.characters.item,
       
       comics: state.characters.comics,
-      
       events: state.characters.events,
+
       series: state.characters.series,
       stories: state.characters.stories
   }
@@ -152,6 +173,13 @@ const mapDispatchToProps = (dispatch, props) => {
     fetchCharacterComicList: (offset) => {
       dispatch(CharactersActions.updateCharacterComicListOffset(offset))
       dispatch(CharactersActions.fetchCharacterComicList())
+    },
+    initCharacterEventList: () => {
+      dispatch(CharactersActions.initCharacterEventList())
+    },
+    fetchCharacterEventList: (offset) => {
+      dispatch(CharactersActions.updateCharacterEventListOffset(offset))
+      dispatch(CharactersActions.fetchCharacterEventList())
     },
     fetchCharacterExtra: () => {
       dispatch(CharactersActions.fetchCharacterExtra())

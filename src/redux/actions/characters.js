@@ -160,6 +160,7 @@ export function fetchCharacterExtra() {
   }
 }
 
+
 // Character comic list
 function setCharacterComicListFetching(value) {
   return {
@@ -226,8 +227,76 @@ export function fetchCharacterComicList() {
         dispatch(setCharacterComicListFetching(false))
         console.error('ComicList error', error)
       })
+  }
+}
 
-    
+
+// Character event list
+function setCharacterEventListFetching(value) {
+  return {
+    type: types.CHARACTERS_SET_CHARACTER_EVENT_LIST_FETCHING,
+    value
+  }
+}
+
+export function initCharacterEventList() {
+  return (dispatch, getState) => {
+    // Reset character list and set total to 0
+    dispatch(updateCharacterEventList([], 0))
+
+    // Set offset to 0
+    dispatch(updateCharacterEventListOffset(0))
+
+    // Fetch list
+    dispatch(fetchCharacterEventList())
+  }
+}
+
+function updateCharacterEventList(list, total) {
+  return {
+    type: types.CHARACTERS_UPDATE_CHARACTER_EVENT_LIST,
+    list: list,
+    total: total
+  }
+}
+
+export function updateCharacterEventListOffset(value) {
+  return {
+    type: types.CHARACTERS_UPDATE_CHARACTER_EVENT_LIST_OFFSET,
+    value
+  }
+}
+
+export function fetchCharacterEventList() {
+  return (dispatch, getState) => {
+    dispatch(setCharacterEventListFetching(true))
+
+    const state = getState()
+    const character = state.characters.item
+    const list = state.characters.events.list
+    const offset = state.characters.events.offset
+    const limit = 10
+
+    const fetchUrl = character.events.collectionURI.replace('http', 'https') + '?ts=1234&apikey=a3ce93a8401b1219c18b9ca8310e1abc&hash=5742e01f78129797c6cc8aca0ec8f005&offset='+offset+'&limit='+limit
+
+    console.log('EventList', fetchUrl)
+    fetch(fetchUrl)
+      .then(response => {
+        dispatch(setCharacterEventListFetching(false))
+
+        const _list = response && response.data && response.data.results ? response.data.results : []
+        const total = response && response.data ? response.data.total : 0
+        console.log('EventList response', response)
+
+        // Concat list and _list
+        const newList = [...list, ..._list]
+
+        dispatch(updateCharacterEventList(newList, total))
+      })
+      .catch(error => {
+        dispatch(setCharacterEventListFetching(false))
+        console.error('EventList error', error)
+      })
   }
 }
 
