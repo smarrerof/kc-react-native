@@ -11,3 +11,15 @@ Crear una aplicación con los siguientes requisitos:
 * En caso de usar una API distinta o de añadir alguna funcionalidad extra, especificar en el readme del repositorio.
 
 Para esta práctica opcionalmente se recomienda usar la [API de Marvel](https://developer.marvel.com/docs)
+
+## Detales de la implementación
+
+- Pantalla inicial, donde se muestran inicialmente los personales creados por nosotros y posteriormente los personajes de la API de marvel. Este segundo paginado usa un "scroll infinito" para ir mostrando de 10 en 10 los personajes ordenados alfabéticamente. Desde esta pantalla podemos acceder al detalle de cada personaje o a añadir un nuevo personaje.
+
+- Detalle de personaje
+	* Propio: Se muestra la imagen, el nombre y la descripción del personaje. Desde esta vista también podremos eliminar el personaje.
+	* Marvel: Se muestra la imagen, el nombre y la descripción del personaje. Tambien se muestra los listados de comics, eventos, series e historias del personaje. De cada bloque se muestran 10 elementos y se podran cargar 10 más desde un botón. Se podrá ver de manera mas grande la imagen del comic, evento o serie haciendo 'click' en ella.
+
+- Alta de personaje: Desde aquí podemos dar de alta personajes. Los datos que se permiten son imagen, nombre y descripción. Solo el nombre es obligatorio.
+
+## Demo
