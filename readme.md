@@ -23,3 +23,4 @@ Para esta práctica opcionalmente se recomienda usar la [API de Marvel](https:/
 - Alta de personaje: Desde aquí podemos dar de alta personajes. Los datos que se permiten son imagen, nombre y descripción. Solo el nombre es obligatorio.
 
 ## Demo
+![React Marvel Demo](https://raw.githubusercontent.com/smarrerof/kc-react-native/master/images/react_marvel.gif)
