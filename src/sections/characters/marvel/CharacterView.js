@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ScrollView, View, StyleSheet, Image, Text, Dimensions, SectionList } from 'react-native'
+import { ScrollView, View, StyleSheet, Image, Text, Dimensions, SectionList, TouchableOpacity, Modal } from 'react-native'
 
 /****** Redux ******/
 import { Actions } from 'react-native-router-flux'
@@ -11,6 +11,14 @@ import { Colors } from 'react_marvel/src/commons'
 import { Button } from 'react_marvel/src/widgets'
 
 export class CharacterView extends Component {
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      modalVisible: false
+    }
+  }
 
   componentWillMount() {
     this.props.initCharacterComicList()
@@ -128,18 +136,30 @@ export class CharacterView extends Component {
     }
   }
 
+  onSelectImage(modalVisible, modalImage) {
+    this.setState({ 
+      modalVisible: modalVisible,
+      modalImage: (modalImage ? modalImage : null)
+    })
+  }
+
   renderItemImageText(item) {
-    const image = { uri: item.thumbnail.path.replace('http', 'https') + '/portrait_small.' + item.thumbnail.extension }
+    const itemImage = { uri: item.thumbnail.path.replace('http', 'https') + '/portrait_small.' + item.thumbnail.extension }
+    const modalImage = { uri: item.thumbnail.path.replace('http', 'https') + '/portrait_incredible.' + item.thumbnail.extension }
     const title = item.title
 
-    return <View style={ styles.itemContainer }>
-        <Image 
-          source={ image } 
-          style={ styles.itemImage } 
-          resizeMode={ 'cover' }
-        />
-      <Text style={ styles.itemText }>{ item.title }</Text>
-    </View>
+    return (
+      <View style={ styles.itemContainer }>
+        <TouchableOpacity
+          onPress={ () => this.onSelectImage(true, modalImage) }>
+          <Image 
+            source={ itemImage } 
+            style={ styles.itemImage } 
+            resizeMode={ 'cover' }></Image>
+        </TouchableOpacity>
+        <Text style={ styles.itemText }>{ item.title }</Text>
+      </View>
+    )
   }
 
   renderItemText(item) {
@@ -156,44 +176,66 @@ export class CharacterView extends Component {
     const name = character && character.name !== '' ? character.name : 'No name available'
     const description = character && character.description !== '' ? character.description : 'No description available'
 
+    console.log('render', this.state.modalVisible, this.state.modalImage)
     return (
-      <ScrollView style={ styles.container } >
-        <Image source={ image } style={ styles.image } resizeMode={ 'cover' } />
-        <View style={ styles.textContainer }>
-          <Text style={ styles.name }>{ name }</Text>
-        </View>
-        <View style={ styles.textContainer }>
-          <Text style={ styles.description }>{ description }</Text>
-        </View>
-        <View style={ styles.textContainer }>
-          <SectionList 
-            renderSectionHeader={ ({section}) => this.renderSectionHeader(section) }
-            renderSectionFooter={ ({section}) => this.renderSectionFooter(section) }
-            sections={[
-              { data: this.props.comics.list, 
-                title: "Comics", 
-                renderItem: ({item}) => this.renderItemImageText(item),
-                keyExtractor: (item) => item.id 
-              },
-              { data: this.props.events.list, 
-                title: "Events", 
-                renderItem: ({item}) => this.renderItemImageText(item),
-                keyExtractor: (item) => item.id  
-              },
-              { data: this.props.series.list, 
-                title: "Series", 
-                renderItem: ({item}) => this.renderItemImageText(item),
-                keyExtractor: (item) => item.id  
-              },
-              { data: this.props.stories.list, 
-                title: "Stories", 
-                renderItem: ({item}) => this.renderItemText(item),
-                keyExtractor: (item) => item.id  
-              }
-            ]}
-          />
-        </View>
-      </ScrollView>
+        <ScrollView style={ styles.container } >
+          <Modal
+            animationType={ 'slide' }
+            transparent={ false }
+            visible={ this.state.modalVisible }>
+            <View style={ styles.modalContainer }>
+              <TouchableOpacity
+                onPress={ () => this.onSelectImage(false) }>
+                <Image 
+                  source={ this.state.modalImage } 
+                  style={ styles.modalImage } 
+                  resizeMode={ 'cover' } />
+              </TouchableOpacity>
+              <Button
+                containerStyle={ styles.modalButton }
+                label={ 'Close' }
+                onPress={ () => this.onSelectImage(false) }
+              />
+            </View>
+          </Modal>
+
+          <Image source={ image } style={ styles.image } resizeMode={ 'cover' } />
+          <View style={ styles.textContainer }>
+            <Text style={ styles.name }>{ name }</Text>
+          </View>
+          <View style={ styles.textContainer }>
+            <Text style={ styles.description }>{ description }</Text>
+          </View>
+          <View style={ styles.textContainer }>
+            <SectionList 
+              renderSectionHeader={ ({section}) => this.renderSectionHeader(section) }
+              renderSectionFooter={ ({section}) => this.renderSectionFooter(section) }
+              sections={[
+                { data: this.props.comics.list, 
+                  title: "Comics", 
+                  renderItem: ({item}) => this.renderItemImageText(item),
+                  keyExtractor: (item) => item.id 
+                },
+                { data: this.props.events.list, 
+                  title: "Events", 
+                  renderItem: ({item}) => this.renderItemImageText(item),
+                  keyExtractor: (item) => item.id  
+                },
+                { data: this.props.series.list, 
+                  title: "Series", 
+                  renderItem: ({item}) => this.renderItemImageText(item),
+                  keyExtractor: (item) => item.id  
+                },
+                { data: this.props.stories.list, 
+                  title: "Stories", 
+                  renderItem: ({item}) => this.renderItemText(item),
+                  keyExtractor: (item) => item.id  
+                }
+              ]}
+            />
+          </View>
+        </ScrollView>
+
     )
   }
 }
@@ -299,5 +341,22 @@ const styles = StyleSheet.create({
   buttonContainerStyle: {
     backgroundColor: 'gray',
     marginTop: 10
+  },
+  // Modal
+  modalContainer: {
+    flex: 1,
+    backgroundColor: Colors.background,
+    paddingTop: 40,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  modalImage: {
+    height: 450,
+    width: 300
+  },
+  modalButton: {
+    backgroundColor: 'gray',
+    marginTop: 10,
+    width: 300
   }
 })
