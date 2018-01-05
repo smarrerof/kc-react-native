@@ -103,6 +103,8 @@ export function fetchCustomCharactersList() {
 
         console.log('CharactersList response', response)
 
+        if (!response) response = []
+
         let list = []
         Object.keys(response).forEach((property) => {
           let item = response[property]
