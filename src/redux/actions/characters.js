@@ -236,7 +236,7 @@ export function fetchCharacterEventList() {
     const character = state.characters.item
     const list = state.characters.events.list
     const offset = state.characters.events.offset
-    const limit = 10
+    const limit = constants.LIMIT
 
     const fetchUrl = character.events.collectionURI + `?${constants.MARVEL_QUERY}&offset=${offset}&limit=${limit}`
 
