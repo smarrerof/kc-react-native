@@ -1,14 +1,13 @@
 import axios from 'axios'
 import * as constants from './constants'
-import { BASE_CUSTOM, BASE_MARVEL } from './constants';
 
 function buildUrl(endpoint, base) {
   if (!base) return endpoint
 
   switch (base) {
-    case BASE_CUSTOM: 
+    case constants.BASE_CUSTOM: 
       return `${endpoint}.json`
-    case BASE_MARVEL:
+    case constants.BASE_MARVEL:
     default:
       return endpoint
   } 
@@ -18,9 +17,9 @@ function buildConf(base) {
   if (!base) return { }
 
   switch (base) {
-    case BASE_CUSTOM: 
+    case constants.BASE_CUSTOM: 
       return { baseURL: constants.BASE_CUSTOM_URL }
-    case BASE_MARVEL:
+    case constants.BASE_MARVEL:
     default:
       return { }
   } 

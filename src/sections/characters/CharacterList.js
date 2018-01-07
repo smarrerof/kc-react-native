@@ -29,16 +29,18 @@ export class CharactersList extends Component {
   }
 
   onCustomSelect(character) {
+    console.log('CharacterList onSelect', character)
     this.props.updateCustomSelected(character)
   }
 
   onMarvelSelect(character) {
+    console.log('CharacterList onSelect', character)
     this.props.updateMarvelSelected(character)
   }
 
   onEndReached() {
     if (this.props.list.length < this.props.total && !this.props.isFetching) {
-      const newOffset = this.props.offset + OFFSET
+      const newOffset = this.props.offset + constants.LIMIT
       this.props.fetchCharactersList(newOffset)
     }
   }

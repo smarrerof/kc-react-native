@@ -32,25 +32,25 @@ export class CharacterView extends Component {
     switch (section.title) {
       case "Comics":
         if (this.props.comics.list.length < this.props.comics.total && !this.props.comics.isFetching) {
-          const newOffset = this.props.comics.offset + OFFSET
+          const newOffset = this.props.comics.offset + constants.LIMIT
           this.props.fetchCharacterComicList(newOffset)
         }
         break;
       case "Events":
         if (this.props.events.list.length < this.props.events.total && !this.props.events.isFetching) {
-          const newOffset = this.props.events.offset + OFFSET
+          const newOffset = this.props.events.offset + constants.LIMIT
           this.props.fetchCharacterEventList(newOffset)
         }
         break;
       case "Series":
         if (this.props.series.list.length < this.props.series.total && !this.props.series.isFetching) {
-          const newOffset = this.props.series.offset + OFFSET
+          const newOffset = this.props.series.offset + constants.LIMIT
           this.props.fetchCharacterSerieList(newOffset)
         }
         break;
       case "Stories":
         if (this.props.stories.list.length < this.props.stories.total && !this.props.stories.isFetching) {
-          const newOffset = this.props.stories.offset + OFFSET
+          const newOffset = this.props.stories.offset + constants.LIMIT
           this.props.fetchCharacterStoryList(newOffset)
         }
         break;
@@ -176,8 +176,7 @@ export class CharacterView extends Component {
     const image = character ? { uri: `${character.thumbnail.path}/landscape_large.${character.thumbnail.extension}` } : null
     const name = character && character.name !== '' ? character.name : 'No name available'
     const description = character && character.description !== '' ? character.description : 'No description available'
-
-    console.log('render', this.state.modalVisible, this.state.modalImage)
+    
     return (
         <ScrollView style={ styles.container } >
           <Modal

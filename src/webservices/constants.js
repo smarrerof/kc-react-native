@@ -4,7 +4,7 @@ export const BASE_CUSTOM = 'CUSTOM'
 export const BASE_MARVEL_URL = 'https://gateway.marvel.com/v1/public'
 export const BASE_CUSTOM_URL = 'https://react-marvel.firebaseio.com'
 
-export const OFFSET = 10 // Page size
+export const LIMIT = 10 // Page size
 
 export const TS = '1234'
 export const APIKEY = 'a3ce93a8401b1219c18b9ca8310e1abc'

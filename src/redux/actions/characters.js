@@ -2,8 +2,7 @@ import * as types from 'react_marvel/src/redux/types/characters'
 import * as constants from 'react_marvel/src/webservices/constants'
 import { fetch, post, remove } from 'react_marvel/src/webservices/webservices'
 
-import { Actions } from 'react-native-router-flux';
-import { MARVEL_QUERY } from '../../webservices/constants';
+import { Actions } from 'react-native-router-flux'
 
 
 function updateCharactersList(list, total) {
@@ -70,9 +69,9 @@ export function fetchCharactersList() {
     const state = getState()
     const list = state.characters.list
     const offset = state.characters.offset
-    const limit = 10
+    const limit = constants.LIMIT
 
-    const fetchUrl = `/characters?${MARVEL_QUERY}&offset=${offset}&limit=${limit}`
+    const fetchUrl = `/characters?${constants.MARVEL_QUERY}&offset=${offset}&limit=${limit}`
     fetch(fetchUrl)
       .then(response => {
         dispatch(setCharactersFetching(false))
@@ -167,9 +166,9 @@ export function fetchCharacterComicList() {
     const character = state.characters.item
     const list = state.characters.comics.list
     const offset = state.characters.comics.offset
-    const limit = 10
+    const limit = constants.LIMIT
 
-    const fetchUrl = character.comics.collectionURI + `?${MARVEL_QUERY}&offset=${offset}&limit=${limit}`
+    const fetchUrl = character.comics.collectionURI + `?${constants.MARVEL_QUERY}&offset=${offset}&limit=${limit}`
 
     console.log('ComicList', fetchUrl)
     fetch(fetchUrl)
@@ -239,7 +238,7 @@ export function fetchCharacterEventList() {
     const offset = state.characters.events.offset
     const limit = 10
 
-    const fetchUrl = character.events.collectionURI + + `?${MARVEL_QUERY}&offset=${offset}&limit=${limit}`
+    const fetchUrl = character.events.collectionURI + `?${constants.MARVEL_QUERY}&offset=${offset}&limit=${limit}`
 
     console.log('EventList', fetchUrl)
     fetch(fetchUrl)
@@ -307,9 +306,9 @@ export function fetchCharacterSerieList() {
     const character = state.characters.item
     const list = state.characters.series.list
     const offset = state.characters.series.offset
-    const limit = 10
+    const limit = constants.LIMIT
 
-    const fetchUrl = character.series.collectionURI + + `?${MARVEL_QUERY}&offset=${offset}&limit=${limit}`
+    const fetchUrl = character.series.collectionURI + `?${constants.MARVEL_QUERY}&offset=${offset}&limit=${limit}`
 
     console.log('SerieList', fetchUrl)
     fetch(fetchUrl)
@@ -377,9 +376,9 @@ export function fetchCharacterStoryList() {
     const character = state.characters.item
     const list = state.characters.stories.list
     const offset = state.characters.stories.offset
-    const limit = 10
+    const limit = constants.LIMIT
 
-    const fetchUrl = character.stories.collectionURI + + `?${MARVEL_QUERY}&offset=${offset}&limit=${limit}`
+    const fetchUrl = character.stories.collectionURI + `?${constants.MARVEL_QUERY}&offset=${offset}&limit=${limit}`
 
     console.log('StoryList', fetchUrl)
     fetch(fetchUrl)
