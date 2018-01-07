@@ -12,6 +12,14 @@ Crear una aplicación con los siguientes requisitos:
 
 Para esta práctica opcionalmente se recomienda usar la [API de Marvel](https://developer.marvel.com/docs)
 
+## Instalación
+```
+$ git clone http://github.com/smarrerof/kc-react-native
+$ cd kc-react-native
+$ npm install
+$ react-native run-ios
+``` 
+
 ## Detalles de la implementación
 
 - Pantalla inicial, donde se muestran inicialmente los personales creados por nosotros y posteriormente los personajes de la API de marvel. Este segundo paginado usa un "scroll infinito" para ir mostrando de 10 en 10 los personajes ordenados alfabéticamente. Desde esta pantalla podemos acceder al detalle de cada personaje o a añadir un nuevo personaje.
