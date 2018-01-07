@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ScrollView, View, StyleSheet, Image, Text, Dimensions, SectionList, TouchableOpacity, Modal } from 'react-native'
+import { ScrollView, View, StyleSheet, Image, Text, Dimensions, SectionList, TouchableOpacity, Modal, Linking } from 'react-native'
 
 /****** Redux ******/
 import { Actions } from 'react-native-router-flux'
@@ -176,6 +176,10 @@ export class CharacterView extends Component {
     const image = character ? { uri: `${character.thumbnail.path}/landscape_large.${character.thumbnail.extension}` } : null
     const name = character && character.name !== '' ? character.name : 'No name available'
     const description = character && character.description !== '' ? character.description : 'No description available'
+
+    const detailUrl = character.urls.find((item) => { return item.type === 'detail' }) 
+    const wikiUrl = character.urls.find((item) => { return item.type === 'wiki' }) 
+    console.log('wikiUrl', wikiUrl)
     
     return (
         <ScrollView style={ styles.container } >
@@ -206,6 +210,20 @@ export class CharacterView extends Component {
           <View style={ styles.textContainer }>
             <Text style={ styles.description }>{ description }</Text>
           </View>
+
+          <View style={ styles.textContainer }>
+            { detailUrl && <Button
+              containerStyle={ styles.urlButton }
+              label={ 'detail' }
+              onPress={ () => { Linking.openURL(detailUrl.url) } }
+            /> }
+            { wikiUrl && <Button
+              containerStyle={ styles.urlButton }
+              label={ 'wiki' }
+              onPress={ () => { Linking.openURL(wikiUrl.url) } }
+            /> }
+          </View>
+          
           <View style={ styles.textContainer }>
             <SectionList 
               renderSectionHeader={ ({section}) => this.renderSectionHeader(section) }
@@ -358,5 +376,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'gray',
     marginTop: 10,
     width: 300
+  },
+  // Url button
+  urlButton: {
+    flex: 1,
+    backgroundColor: '#f25d64',
+    margin: 10
   }
 })
