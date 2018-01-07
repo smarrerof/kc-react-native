@@ -73,7 +73,7 @@ export class CharacterView extends Component {
         return (
           <View>
             {
-              (this.props.comics.list.length === 0 ||
+              (this.props.comics.list.length === 0 && this.props.comics.isFetching ||
               this.props.comics.list.length < this.props.comics.total) &&
               <Button
                 containerStyle={ styles.buttonContainerStyle }
@@ -82,13 +82,17 @@ export class CharacterView extends Component {
                 onPress={ () => this.loadMore(section) }
               />
             }
+            {
+              this.props.comics.list.length === 0 && !this.props.comics.isFetching &&
+              <Text style={ styles.footerText }>No information available</Text>
+            }
           </View>
         )
       case "Events":
         return (
           <View>
             {
-              (this.props.events.list.length === 0 ||
+              (this.props.events.list.length === 0 && this.props.events.isFetching ||
               this.props.events.list.length < this.props.events.total) &&
               <Button
                 containerStyle={ styles.buttonContainerStyle }
@@ -97,13 +101,17 @@ export class CharacterView extends Component {
                 onPress={ () => this.loadMore(section) }
               />
             }
+            {
+              this.props.events.list.length === 0 && !this.props.events.isFetching &&
+              <Text style={ styles.footerText }>No information available</Text>
+            }
           </View>
         )
       case "Series":
         return (
           <View>
             {
-              (this.props.series.list.length === 0 ||
+              (this.props.series.list.length === 0 && this.props.series.isFetching ||
               this.props.series.list.length < this.props.series.total) &&
               <Button
                 containerStyle={ styles.buttonContainerStyle }
@@ -112,13 +120,17 @@ export class CharacterView extends Component {
                 onPress={ () => this.loadMore(section) }
               />
             }
+            {
+              this.props.series.list.length === 0 && !this.props.series.isFetching &&
+              <Text style={ styles.footerText }>No information available</Text>
+            }
           </View>
         )
       case "Stories":
         return (
           <View>
             {
-              (this.props.stories.list.length === 0 ||
+              (this.props.stories.list.length === 0 && this.props.stories.isFetching ||
               this.props.stories.list.length < this.props.stories.total) &&
               <Button
                 containerStyle={ styles.buttonContainerStyle }
@@ -126,6 +138,10 @@ export class CharacterView extends Component {
                 isFetching={ this.props.stories.isFetching }
                 onPress={ () => this.loadMore(section) }
               />
+            }
+            {
+              this.props.stories.list.length === 0 && !this.props.stories.isFetching &&
+              <Text style={ styles.footerText }>No information available</Text>
             }
           </View>
         )
@@ -179,7 +195,6 @@ export class CharacterView extends Component {
 
     const detailUrl = character.urls.find((item) => { return item.type === 'detail' }) 
     const wikiUrl = character.urls.find((item) => { return item.type === 'wiki' }) 
-    console.log('wikiUrl', wikiUrl)
     
     return (
         <ScrollView style={ styles.container } >
@@ -355,10 +370,17 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     fontWeight: '600'
   },
-  // Button style
+  // Footer
   buttonContainerStyle: {
     backgroundColor: 'gray',
     marginTop: 10
+  },
+  footerText: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: '400',
+    color: 'white',
+    padding: 10
   },
   // Modal
   modalContainer: {
