@@ -3,6 +3,7 @@ import * as constants from 'react_marvel/src/webservices/constants'
 import { fetch, post, remove } from 'react_marvel/src/webservices/webservices'
 
 import { Actions } from 'react-native-router-flux';
+import { MARVEL_QUERY } from '../../webservices/constants';
 
 
 function updateCharactersList(list, total) {
@@ -71,7 +72,7 @@ export function fetchCharactersList() {
     const offset = state.characters.offset
     const limit = 10
 
-    const fetchUrl = '/characters?ts=1234&apikey=a3ce93a8401b1219c18b9ca8310e1abc&hash=5742e01f78129797c6cc8aca0ec8f005&offset='+offset+'&limit='+limit
+    const fetchUrl = `/characters?${MARVEL_QUERY}&offset=${offset}&limit=${limit}`
     fetch(fetchUrl)
       .then(response => {
         dispatch(setCharactersFetching(false))
@@ -168,7 +169,7 @@ export function fetchCharacterComicList() {
     const offset = state.characters.comics.offset
     const limit = 10
 
-    const fetchUrl = character.comics.collectionURI.replace('http', 'https') + '?ts=1234&apikey=a3ce93a8401b1219c18b9ca8310e1abc&hash=5742e01f78129797c6cc8aca0ec8f005&offset='+offset+'&limit='+limit
+    const fetchUrl = character.comics.collectionURI + `?${MARVEL_QUERY}&offset=${offset}&limit=${limit}`
 
     console.log('ComicList', fetchUrl)
     fetch(fetchUrl)
@@ -238,7 +239,7 @@ export function fetchCharacterEventList() {
     const offset = state.characters.events.offset
     const limit = 10
 
-    const fetchUrl = character.events.collectionURI.replace('http', 'https') + '?ts=1234&apikey=a3ce93a8401b1219c18b9ca8310e1abc&hash=5742e01f78129797c6cc8aca0ec8f005&offset='+offset+'&limit='+limit
+    const fetchUrl = character.events.collectionURI + + `?${MARVEL_QUERY}&offset=${offset}&limit=${limit}`
 
     console.log('EventList', fetchUrl)
     fetch(fetchUrl)
@@ -308,7 +309,7 @@ export function fetchCharacterSerieList() {
     const offset = state.characters.series.offset
     const limit = 10
 
-    const fetchUrl = character.series.collectionURI.replace('http', 'https') + '?ts=1234&apikey=a3ce93a8401b1219c18b9ca8310e1abc&hash=5742e01f78129797c6cc8aca0ec8f005&offset='+offset+'&limit='+limit
+    const fetchUrl = character.series.collectionURI + + `?${MARVEL_QUERY}&offset=${offset}&limit=${limit}`
 
     console.log('SerieList', fetchUrl)
     fetch(fetchUrl)
@@ -378,7 +379,7 @@ export function fetchCharacterStoryList() {
     const offset = state.characters.stories.offset
     const limit = 10
 
-    const fetchUrl = character.stories.collectionURI.replace('http', 'https') + '?ts=1234&apikey=a3ce93a8401b1219c18b9ca8310e1abc&hash=5742e01f78129797c6cc8aca0ec8f005&offset='+offset+'&limit='+limit
+    const fetchUrl = character.stories.collectionURI + + `?${MARVEL_QUERY}&offset=${offset}&limit=${limit}`
 
     console.log('StoryList', fetchUrl)
     fetch(fetchUrl)

@@ -8,6 +8,7 @@ import * as CharactersActions from 'react_marvel/src/redux/actions/characters'
 /*******************/
 
 import { Colors } from 'react_marvel/src/commons'
+import * as constants from 'react_marvel/src/webservices/constants'
 import { Button } from 'react_marvel/src/widgets'
 
 export class CharacterView extends Component {
@@ -31,25 +32,25 @@ export class CharacterView extends Component {
     switch (section.title) {
       case "Comics":
         if (this.props.comics.list.length < this.props.comics.total && !this.props.comics.isFetching) {
-          const newOffset = this.props.comics.offset + 10
+          const newOffset = this.props.comics.offset + OFFSET
           this.props.fetchCharacterComicList(newOffset)
         }
         break;
       case "Events":
         if (this.props.events.list.length < this.props.events.total && !this.props.events.isFetching) {
-          const newOffset = this.props.events.offset + 10
+          const newOffset = this.props.events.offset + OFFSET
           this.props.fetchCharacterEventList(newOffset)
         }
         break;
       case "Series":
         if (this.props.series.list.length < this.props.series.total && !this.props.series.isFetching) {
-          const newOffset = this.props.series.offset + 10
+          const newOffset = this.props.series.offset + OFFSET
           this.props.fetchCharacterSerieList(newOffset)
         }
         break;
       case "Stories":
         if (this.props.stories.list.length < this.props.stories.total && !this.props.stories.isFetching) {
-          const newOffset = this.props.stories.offset + 10
+          const newOffset = this.props.stories.offset + OFFSET
           this.props.fetchCharacterStoryList(newOffset)
         }
         break;
@@ -144,8 +145,8 @@ export class CharacterView extends Component {
   }
 
   renderItemImageText(item) {
-    const itemImage = { uri: item.thumbnail.path.replace('http', 'https') + '/portrait_small.' + item.thumbnail.extension }
-    const modalImage = { uri: item.thumbnail.path.replace('http', 'https') + '/portrait_incredible.' + item.thumbnail.extension }
+    const itemImage = { uri: item.thumbnail.path + '/portrait_small.' + item.thumbnail.extension }
+    const modalImage = { uri: item.thumbnail.path + '/portrait_incredible.' + item.thumbnail.extension }
     const title = item.title
 
     return (
@@ -172,7 +173,7 @@ export class CharacterView extends Component {
 
   render() {
     const { character } = this.props
-    const image = character ? { uri: `${character.thumbnail.path.replace('http', 'https')}/landscape_large.${character.thumbnail.extension}` } : null
+    const image = character ? { uri: `${character.thumbnail.path}/landscape_large.${character.thumbnail.extension}` } : null
     const name = character && character.name !== '' ? character.name : 'No name available'
     const description = character && character.description !== '' ? character.description : 'No description available'
 
@@ -212,22 +213,22 @@ export class CharacterView extends Component {
               renderSectionFooter={ ({section}) => this.renderSectionFooter(section) }
               sections={[
                 { data: this.props.comics.list, 
-                  title: "Comics", 
+                  title: 'Comics', 
                   renderItem: ({item}) => this.renderItemImageText(item),
                   keyExtractor: (item) => item.id 
                 },
                 { data: this.props.events.list, 
-                  title: "Events", 
+                  title: 'Events', 
                   renderItem: ({item}) => this.renderItemImageText(item),
                   keyExtractor: (item) => item.id  
                 },
                 { data: this.props.series.list, 
-                  title: "Series", 
+                  title: 'Series', 
                   renderItem: ({item}) => this.renderItemImageText(item),
                   keyExtractor: (item) => item.id  
                 },
                 { data: this.props.stories.list, 
-                  title: "Stories", 
+                  title: 'Stories', 
                   renderItem: ({item}) => this.renderItemText(item),
                   keyExtractor: (item) => item.id  
                 }

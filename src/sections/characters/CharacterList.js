@@ -8,6 +8,7 @@ import * as CharactersActions from 'react_marvel/src/redux/actions/characters'
 /*******************/
 
 import { Colors } from 'react_marvel/src/commons'
+import * as constants from 'react_marvel/src/webservices/constants'
 import { Spinner } from 'react_marvel/src/widgets'
 import CustomCharacterCell from './custom/CharacterCell'
 import MarvelCharacterCell from './marvel/CharacterCell'
@@ -37,7 +38,7 @@ export class CharactersList extends Component {
 
   onEndReached() {
     if (this.props.list.length < this.props.total && !this.props.isFetching) {
-      const newOffset = this.props.offset + 10
+      const newOffset = this.props.offset + OFFSET
       this.props.fetchCharactersList(newOffset)
     }
   }
